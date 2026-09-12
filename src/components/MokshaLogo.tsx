@@ -26,7 +26,7 @@ export const MokshaLogo: React.FC<MokshaLogoProps> = ({
     return (
       <div className={`relative inline-flex items-center justify-center ${className}`}>
         <img
-          src="/logo.png"
+          src="./logo.png"
           alt="Moksha Gateways Logo"
           referrerPolicy="no-referrer"
           className={`${currentSize.img} w-auto object-contain rounded-lg shadow-sm`}
@@ -44,7 +44,7 @@ export const MokshaLogo: React.FC<MokshaLogoProps> = ({
       {/* Official Logo Graphic */}
       <div className="relative shrink-0 rounded-xl overflow-hidden p-0.5 bg-white/95 shadow-md shadow-black/10 border border-slate-200/50">
         <img
-          src="/logo.png"
+          src="./logo.png"
           alt="Moksha Gateways Logo"
           referrerPolicy="no-referrer"
           className={`${currentSize.img} w-auto object-contain`}

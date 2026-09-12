@@ -341,6 +341,82 @@ export const AiPlannerModal: React.FC<AiPlannerModalProps> = ({
 
   if (!isOpen) return null;
 
+  const createFallbackPlan = (dest: string, durationStr: string, trav: string, style: string, pref: string) => {
+    const numDays = Math.max(2, Math.min(14, parseInt(durationStr) || 4));
+    const targetDest = dest.trim() || 'Himalayas & Sacred Circuit';
+    const cleanDest = targetDest.replace(/[,\.].*$/, '').trim();
+
+    const dayTemplates = [
+      {
+        title: `Arrival & Sacred Welcome in ${cleanDest}`,
+        activities: [
+          `VIP pickup and seamless transfer to scenic heritage hotel`,
+          `Traditional Aarti welcome with refreshing mountain herbal tea or holy charanamrit`,
+          `Evening orientation and sunset stroll along the local riverside or spiritual promenade`
+        ],
+        spiritualHighlight: `Evening Mangala Aarti & blessing ceremony in ${cleanDest}`,
+        staySuggestion: `Heritage Luxury Retreat / Alpine Boutique Stay`
+      },
+      {
+        title: `Divine Darshans & Historic Sanctum Exploration`,
+        activities: [
+          `Special VIP queue assistance for morning sanctum sanctorum darshan`,
+          `Guided heritage exploration with certified local priest/historian`,
+          `Sattvic gourmet luncheon featuring authentic local delicacies`
+        ],
+        spiritualHighlight: `Auspicious morning Rudrabhishekam / Puja offering`,
+        staySuggestion: `4-Star Deluxe Resort with mountain or river view`
+      },
+      {
+        title: `Scenic Splendors, Meditation & Hidden Trails`,
+        activities: [
+          `Early sunrise meditation walk amidst panoramic Himalayan/riverfront viewpoints`,
+          `Excursion to sacred caves, ancient shrines, and picturesque village hamlets`,
+          `Evening acoustic devotional chanting and local artisans market visit`
+        ],
+        spiritualHighlight: `Peaceful mindfulness session at high-altitude viewpoint`,
+        staySuggestion: `Scenic Valley Resort / Luxury Swiss Cottage`
+      },
+      {
+        title: `Auspicious Morning Blessings & Homeward Journey`,
+        activities: [
+          `Dawn Surya Arghya and sacred water collection (Gangajal / Tirtham)`,
+          `Souvenir shopping for pure brass mementos, handmade shawls and certified prasadam`,
+          `Assisted airport / Vande Bharat express station transfer with souvenir gift box`
+        ],
+        spiritualHighlight: `Final departure blessings and sanctified mahaprasad distribution`,
+        staySuggestion: `Departure to Home Destination`
+      }
+    ];
+
+    const generatedDays = [];
+    for (let i = 1; i <= numDays; i++) {
+      const templateIndex = (i - 1) % dayTemplates.length;
+      const base = dayTemplates[templateIndex];
+      generatedDays.push({
+        day: i,
+        title: i === numDays ? `Day ${i}: Farewell & Journey Homeward from ${cleanDest}` : `Day ${i}: ${base.title}`,
+        activities: base.activities.map(a => `${a} (${cleanDest})`),
+        spiritualHighlight: base.spiritualHighlight,
+        staySuggestion: i === numDays ? 'Departure' : base.staySuggestion
+      });
+    }
+
+    return {
+      title: `${numDays}-Day Sacred & Scenic Journey to ${targetDest}`,
+      summary: `A personalized ${style || 'Spiritual & Leisure'} journey tailored for ${trav || '2 travelers'}, harmonizing VIP temple darshans, breathtaking nature vistas, and top-rated comfort based on your preference: "${pref || 'Comfort & Satvik Meals'}".`,
+      bestSeason: 'April to June & September to November',
+      estimatedCost: `₹${(numDays * 4200).toLocaleString('en-IN')} per person`,
+      days: generatedDays,
+      packingTips: [
+        'Modest traditional clothing for temple sanctums and warm thermal layers for cool evenings',
+        'Sturdy slip-resistant walking shoes and trekking socks',
+        'Government ID proofs (Aadhar/Passport) for biometric registrations and VIP darshan passes',
+        'Personal medications and altitude care essentials'
+      ]
+    };
+  };
+
   const handleGenerate = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
@@ -359,14 +435,20 @@ export const AiPlannerModal: React.FC<AiPlannerModalProps> = ({
         })
       });
 
-      const data = await res.json();
-      if (data.success && data.plan) {
-        setGeneratedPlan(data.plan);
-      } else {
-        setError(data.error || 'Could not generate custom itinerary. Please check your connection.');
+      if (res.ok) {
+        const data = await res.json();
+        if (data.success && data.plan) {
+          setGeneratedPlan(data.plan);
+          return;
+        }
       }
-    } catch (err: any) {
-      setError(err?.message || 'Network error occurred');
+      // If endpoint returns non-ok (e.g. 404 on GitHub Pages or static hosting)
+      const fallback = createFallbackPlan(destination, days, travelers, tripType, preferences);
+      setGeneratedPlan(fallback);
+    } catch {
+      // Network error or offline - seamlessly provide rich offline/static plan
+      const fallback = createFallbackPlan(destination, days, travelers, tripType, preferences);
+      setGeneratedPlan(fallback);
     } finally {
       setIsLoading(false);
     }

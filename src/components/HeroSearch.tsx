@@ -46,7 +46,7 @@ export const POPULAR_DESTINATIONS: DestinationVideo[] = [
     badge: 'Popular Trek',
     tagline: 'Snow-capped peaks & high valleys',
     url: 'https://upload.wikimedia.org/wikipedia/commons/8/83/Snow-capped_Himalayan_mountains_Rasuwa.webm',
-    poster: '/destinations/spiti.jpg'
+    poster: './destinations/spiti.jpg'
   },
   {
     id: 'leh-ladakh',
@@ -54,7 +54,7 @@ export const POPULAR_DESTINATIONS: DestinationVideo[] = [
     badge: 'Trending Adventure',
     tagline: 'High mountain passes & crystal lakes',
     url: 'https://upload.wikimedia.org/wikipedia/commons/c/c5/Crossing_of_a_stream_between_Nubra_valley_and_Pangong_lake.webm',
-    poster: '/destinations/ladakh.jpg'
+    poster: './destinations/ladakh.jpg'
   },
   {
     id: 'sacred-bharat',
@@ -62,7 +62,7 @@ export const POPULAR_DESTINATIONS: DestinationVideo[] = [
     badge: 'Pilgrimage Circuit',
     tagline: 'Kedarnath Dham, Badrinath & Varanasi',
     url: 'https://upload.wikimedia.org/wikipedia/commons/4/49/India_Unravelled.webm',
-    poster: '/destinations/kedarnath.jpg'
+    poster: './destinations/kedarnath.jpg'
   },
   {
     id: 'bali-tropics',
