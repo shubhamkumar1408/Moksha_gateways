@@ -1,0 +1,7 @@
+{
+  "name": "Moksha Gateways",
+  "description": "India's premier travel and spiritual booking portal for flights, hotels, pilgrimage yatras, holiday packages, trains, and cabs.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
