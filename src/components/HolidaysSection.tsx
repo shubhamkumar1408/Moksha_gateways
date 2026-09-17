@@ -15,16 +15,21 @@ import {
   Filter,
   ShieldCheck,
   Calendar,
-  MessageCircle
+  MessageCircle,
+  QrCode
 } from 'lucide-react';
 import { HolidayPackage } from '../types';
 import { MOCK_HOLIDAYS } from '../data/mockData';
 
 interface HolidaysSectionProps {
   onBookHoliday: (holiday: HolidayPackage) => void;
+  onQuickQrPay?: (holiday: HolidayPackage) => void;
 }
 
-export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday }) => {
+export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ 
+  onBookHoliday,
+  onQuickQrPay 
+}) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activePackageModal, setActivePackageModal] = useState<HolidayPackage | null>(null);
@@ -33,19 +38,29 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
   const categories = [
     { id: 'all', label: 'All Packages', count: MOCK_HOLIDAYS.length },
     { 
+      id: 'kashmir', 
+      label: '❄️ Kashmir Paradise', 
+      count: MOCK_HOLIDAYS.filter(p => p.category === 'kashmir').length 
+    },
+    { 
       id: 'himachal', 
       label: 'Himachal Pradesh', 
       count: MOCK_HOLIDAYS.filter(p => p.category === 'himachal').length 
     },
     { 
       id: 'uttarakhand', 
-      label: 'Uttarakhand & Sacred', 
+      label: 'Uttarakhand (Chakrata & Sacred)', 
       count: MOCK_HOLIDAYS.filter(p => p.category === 'uttarakhand' || p.category === 'sacred').length 
     },
     { 
       id: 'ladakh', 
       label: 'Leh Ladakh', 
       count: MOCK_HOLIDAYS.filter(p => p.category === 'ladakh').length 
+    },
+    { 
+      id: 'rajasthan', 
+      label: '🏰 Royal Rajasthan', 
+      count: MOCK_HOLIDAYS.filter(p => p.category === 'rajasthan').length 
     },
     { 
       id: 'international', 
@@ -59,12 +74,16 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
     return MOCK_HOLIDAYS.filter(pkg => {
       // Category filter
       let matchesCategory = true;
-      if (selectedCategory === 'himachal') {
+      if (selectedCategory === 'kashmir') {
+        matchesCategory = pkg.category === 'kashmir';
+      } else if (selectedCategory === 'himachal') {
         matchesCategory = pkg.category === 'himachal';
       } else if (selectedCategory === 'uttarakhand') {
         matchesCategory = pkg.category === 'uttarakhand' || pkg.category === 'sacred';
       } else if (selectedCategory === 'ladakh') {
         matchesCategory = pkg.category === 'ladakh';
+      } else if (selectedCategory === 'rajasthan') {
+        matchesCategory = pkg.category === 'rajasthan';
       } else if (selectedCategory === 'international') {
         matchesCategory = Boolean(pkg.isInternational || pkg.category === 'international');
       }
@@ -74,6 +93,8 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
       const matchesSearch = !query || 
         pkg.title.toLowerCase().includes(query) ||
         (pkg.location && pkg.location.toLowerCase().includes(query)) ||
+        (pkg.region && pkg.region.toLowerCase().includes(query)) ||
+        (pkg.reasonToVisit && pkg.reasonToVisit.toLowerCase().includes(query)) ||
         pkg.destination.toLowerCase().includes(query) ||
         pkg.theme.toLowerCase().includes(query) ||
         pkg.tags.some(t => t.toLowerCase().includes(query));
@@ -83,25 +104,25 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
   }, [selectedCategory, searchQuery]);
 
   return (
-    <div id="holidays-section" className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div id="holidays-section" className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 w-full min-w-0">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-[#0b1b2d] via-[#102744] to-[#15345a] rounded-3xl p-6 sm:p-8 text-white mb-8 shadow-xl relative overflow-hidden border border-orange-500/20">
+      <div className="bg-gradient-to-r from-[#0b1b2d] via-[#102744] to-[#15345a] rounded-2xl sm:rounded-3xl p-4 sm:p-8 text-white mb-6 sm:mb-8 shadow-xl relative overflow-hidden border border-orange-500/20 w-full min-w-0">
         <div className="absolute top-0 right-0 -mr-16 -mt-16 w-80 h-80 bg-[#ff6a00]/10 rounded-full blur-3xl pointer-events-none" />
         <div className="relative z-10 max-w-3xl">
           <span className="text-[#ff6a00] font-extrabold text-xs uppercase tracking-wider flex items-center gap-1.5 mb-2">
             <Palmtree className="w-4 h-4 text-[#ff6a00]" />
             <span>Moksha Gateways Holiday & Mountain Expeditions</span>
           </span>
-          <h2 className="text-2xl sm:text-3xl font-black text-white font-['Cinzel'] tracking-wide">
-            Himalayan Treks, Mountain Escapes & International Getaways
+          <h2 className="text-xl sm:text-3xl font-black text-white font-['Cinzel'] tracking-wide">
+            Himalayan Treks, Royal Rajasthan & International Getaways
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
-            Explore curated domestic trails across Spiti, Ladakh, Kasol, Chopta, Kedarnath and exotic international escapes across Vietnam, Thailand, Bali & Bhutan.
+            Explore Royal Rajasthan palaces & desert dunes (Udaipur, Jaisalmer, Mount Abu), Himalayan circuits (Spiti, Ladakh, Kedarnath, Chopta), and exotic international escapes across Vietnam, Thailand, Bali & Bhutan.
           </p>
         </div>
 
         {/* Search & Filters Bar */}
-        <div className="mt-6 flex flex-col sm:flex-row gap-3 relative z-10 items-stretch sm:items-center justify-between">
+        <div className="mt-5 sm:mt-6 flex flex-col sm:flex-row gap-3 relative z-10 items-stretch sm:items-center justify-between">
           {/* Quick Search */}
           <div className="relative flex-1 max-w-md">
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
@@ -109,7 +130,7 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search by destination, location (e.g. Spiti, Bali, Kedarnath, Kasol)..."
+              placeholder="Search destination (e.g. Udaipur, Jaisalmer, Mount Abu, Spiti, Bali)..."
               className="w-full pl-10 pr-8 py-2.5 bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 rounded-xl text-xs text-white placeholder-slate-300 focus:outline-hidden focus:border-[#ff6a00] transition-all"
             />
             {searchQuery && (
@@ -123,12 +144,12 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
           </div>
 
           {/* Category Pills */}
-          <div className="flex flex-wrap items-center gap-1.5">
+          <div className="flex flex-wrap items-center gap-1.5 overflow-x-auto no-scrollbar max-w-full pb-1">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-3 sm:px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 shrink-0 ${
                   selectedCategory === cat.id
                     ? 'bg-gradient-to-r from-[#ff6a00] to-orange-500 text-white shadow-md shadow-orange-950/40 font-black'
                     : 'bg-white/10 text-white hover:bg-white/20 border border-white/15'
@@ -150,7 +171,7 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
 
       {/* Package Grid */}
       {filteredPackages.length === 0 ? (
-        <div className="bg-white rounded-2xl p-12 text-center border border-slate-200 shadow-xs">
+        <div className="bg-white rounded-2xl p-8 sm:p-12 text-center border border-slate-200 shadow-xs">
           <Compass className="w-12 h-12 text-slate-400 mx-auto mb-3 animate-bounce" />
           <h3 className="text-base font-bold text-slate-800">No packages found for "{searchQuery}"</h3>
           <p className="text-xs text-slate-500 mt-1">Try clearing filters or search for Spiti, Bali, Vietnam, Kasol, or Kedarnath.</p>
@@ -162,12 +183,12 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full min-w-0">
           {filteredPackages.map((pkg) => (
             <div
               key={pkg.id}
               id={`holiday-card-${pkg.id}`}
-              className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-teal-500 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group"
+              className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-teal-500 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group w-full min-w-0"
             >
               <div>
                 {/* Image & Badges */}
@@ -208,21 +229,42 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
 
                 {/* Package Details */}
                 <div className="p-5 pb-3">
-                  {/* Location with MapPin - Explicitly highlighted */}
-                  {pkg.location && (
-                    <div className="flex items-center gap-1.5 text-xs text-teal-900 font-bold bg-teal-50/90 px-2.5 py-1 rounded-lg mb-2.5 border border-teal-200/60">
-                      <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                      <span className="truncate">{pkg.location}</span>
-                    </div>
-                  )}
+                  {/* Location & Region Badges */}
+                  <div className="flex flex-col gap-1.5 mb-2.5">
+                    {pkg.location && (
+                      <div className="flex items-center gap-1.5 text-xs text-teal-900 font-bold bg-teal-50/90 px-2.5 py-1 rounded-lg border border-teal-200/60">
+                        <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                        <span className="truncate">{pkg.location}</span>
+                      </div>
+                    )}
+                    {pkg.region && (
+                      <div className="flex items-center gap-1.5 text-[11px] text-amber-900 font-bold bg-amber-50/90 px-2 py-0.5 rounded-md border border-amber-200/60 w-fit">
+                        <Compass className="w-3 h-3 text-amber-600 shrink-0" />
+                        <span>Region: {pkg.region}</span>
+                      </div>
+                    )}
+                  </div>
 
                   <h3 className="text-base font-black text-slate-900 leading-snug line-clamp-2 mb-1.5 group-hover:text-teal-700 transition-colors">
                     {pkg.title}
                   </h3>
 
-                  <p className="text-xs text-slate-500 line-clamp-2 mb-3">
+                  <p className="text-xs text-slate-500 line-clamp-2 mb-2.5">
                     {pkg.destination}
                   </p>
+
+                  {/* Why Visit / Reason */}
+                  {pkg.reasonToVisit && (
+                    <div className="mb-3 bg-gradient-to-r from-orange-50/90 to-amber-50/70 p-2.5 rounded-xl border border-orange-200/70">
+                      <div className="flex items-center gap-1 text-[11px] font-black text-orange-950 uppercase tracking-wide mb-1">
+                        <Sparkles className="w-3 h-3 text-[#ff6a00]" />
+                        <span>Why Visit</span>
+                      </div>
+                      <p className="text-[11px] text-slate-700 leading-relaxed line-clamp-2">
+                        {pkg.reasonToVisit}
+                      </p>
+                    </div>
+                  )}
 
                   {/* Highlights Bullet Preview */}
                   {pkg.highlights && pkg.highlights.length > 0 && (
@@ -263,14 +305,26 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
 
                 <div className="flex items-center gap-1.5">
                   <a
-                    href={`https://wa.me/917352883580?text=Namaste%2C%20I%20want%20to%20inquire%20about%20${encodeURIComponent(pkg.title)}%20(${encodeURIComponent(pkg.duration)}%20-%20Rs.${pkg.price})`}
+                    href={`https://wa.me/919334789099?text=Namaste%2C%20I%20want%20to%20inquire%20about%20${encodeURIComponent(pkg.title)}%20(${encodeURIComponent(pkg.duration)}%20-%20Rs.${pkg.price})`}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="p-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Chat on WhatsApp (7352883580)"
+                    title="Chat on WhatsApp (+91 9334789099)"
                   >
                     <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
                   </a>
+
+                  {onQuickQrPay && (
+                    <button
+                      type="button"
+                      onClick={() => onQuickQrPay(pkg)}
+                      className="p-2 bg-gradient-to-r from-[#00baf2] to-[#002970] hover:opacity-90 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+                      title="Direct Paytm UPI QR Payment & Booking"
+                    >
+                      <QrCode className="w-3.5 h-3.5 text-white" />
+                      <span className="hidden sm:inline">QR Pay</span>
+                    </button>
+                  )}
 
                   <button
                     type="button"
@@ -286,9 +340,9 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
                     type="button"
                     id={`book-holiday-btn-${pkg.id}`}
                     onClick={() => onBookHoliday(pkg)}
-                    className="px-4 py-2 bg-gradient-to-r from-[#ff6a00] to-orange-600 hover:from-orange-500 hover:to-[#ff6a00] text-white font-extrabold text-xs rounded-xl shadow-md shadow-orange-950/30 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
+                    className="px-3 sm:px-4 py-2 bg-gradient-to-r from-[#ff6a00] to-orange-600 hover:from-orange-500 hover:to-[#ff6a00] text-white font-extrabold text-xs rounded-xl shadow-md shadow-orange-950/30 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
                   >
-                    <span>BOOK NOW</span>
+                    <span>BOOK</span>
                     <ChevronRight className="w-3.5 h-3.5" />
                   </button>
                 </div>
@@ -320,17 +374,37 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
                 {activePackageModal.title}
               </h3>
 
-              {/* Exact Location */}
-              {activePackageModal.location && (
-                <div className="flex items-center gap-1.5 text-xs text-teal-200 mt-2">
-                  <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
-                  <span>{activePackageModal.location}</span>
-                </div>
-              )}
+              {/* Exact Location & Region */}
+              <div className="flex flex-wrap items-center gap-2 mt-2">
+                {activePackageModal.location && (
+                  <div className="flex items-center gap-1.5 text-xs text-teal-200">
+                    <MapPin className="w-3.5 h-3.5 text-rose-400 shrink-0" />
+                    <span>{activePackageModal.location}</span>
+                  </div>
+                )}
+                {activePackageModal.region && (
+                  <span className="text-[11px] bg-amber-400/20 text-amber-200 border border-amber-300/30 px-2 py-0.5 rounded-md font-semibold">
+                    📍 {activePackageModal.region}
+                  </span>
+                )}
+              </div>
             </div>
 
             {/* Modal Body */}
             <div className="p-6 max-h-[65vh] overflow-y-auto space-y-5">
+              {/* Reason to Visit */}
+              {activePackageModal.reasonToVisit && (
+                <div className="bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl p-4 border border-orange-200/80">
+                  <h4 className="text-xs font-black uppercase text-orange-900 tracking-wider mb-1.5 flex items-center gap-1.5">
+                    <Sparkles className="w-4 h-4 text-[#ff6a00]" />
+                    <span>Why Visit This Destination</span>
+                  </h4>
+                  <p className="text-xs text-slate-800 leading-relaxed font-medium">
+                    {activePackageModal.reasonToVisit}
+                  </p>
+                </div>
+              )}
+
               {/* Highlights */}
               {activePackageModal.highlights && (
                 <div>
@@ -400,16 +474,31 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
                 </div>
               </div>
 
-              <div className="flex items-center gap-2">
+              <div className="flex flex-wrap items-center gap-2">
                 <a
-                  href={`https://wa.me/917352883580?text=Namaste%2C%20I%20want%20to%20inquire%20about%20${encodeURIComponent(activePackageModal.title)}%20(${encodeURIComponent(activePackageModal.duration)}%20-%20Rs.${activePackageModal.price})`}
+                  href={`https://wa.me/919334789099?text=Namaste%2C%20I%20want%20to%20inquire%20about%20${encodeURIComponent(activePackageModal.title)}%20(${encodeURIComponent(activePackageModal.duration)}%20-%20Rs.${activePackageModal.price})`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5 transition-all"
+                  className="px-3 sm:px-4 py-2.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs rounded-xl shadow-xs flex items-center gap-1.5 transition-all"
                 >
                   <MessageCircle className="w-4 h-4" />
-                  <span>Chat on WhatsApp</span>
+                  <span>WhatsApp (+91 9334789099)</span>
                 </a>
+
+                {onQuickQrPay && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const toBook = activePackageModal;
+                      setActivePackageModal(null);
+                      onQuickQrPay(toBook);
+                    }}
+                    className="px-4 py-2.5 bg-gradient-to-r from-[#00baf2] via-[#052b61] to-[#002970] hover:opacity-95 text-white font-black text-xs rounded-xl shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 border border-sky-300"
+                  >
+                    <QrCode className="w-4 h-4 text-[#00baf2]" />
+                    <span>⚡ DIRECT QR PAY & BOOK</span>
+                  </button>
+                )}
 
                 <button
                   type="button"
@@ -418,7 +507,7 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ onBookHoliday 
                     setActivePackageModal(null);
                     onBookHoliday(toBook);
                   }}
-                  className="px-6 py-2.5 bg-gradient-to-r from-[#ff6a00] to-orange-600 hover:from-orange-500 hover:to-[#ff6a00] text-white font-black text-xs rounded-xl shadow-md cursor-pointer transition-all active:scale-95"
+                  className="px-5 sm:px-6 py-2.5 bg-gradient-to-r from-[#ff6a00] to-orange-600 hover:from-orange-500 hover:to-[#ff6a00] text-white font-black text-xs rounded-xl shadow-md cursor-pointer transition-all active:scale-95"
                 >
                   PROCEED TO BOOK
                 </button>

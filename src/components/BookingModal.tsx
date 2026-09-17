@@ -14,10 +14,12 @@ import {
   Flame,
   Plane,
   Building2,
-  Calendar
+  Calendar,
+  MessageCircle
 } from 'lucide-react';
 import { Booking, Passenger, ServiceType } from '../types';
 import { MokshaLogo } from './MokshaLogo';
+import { UpiPaymentCard } from './UpiPaymentCard';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -100,6 +102,44 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     } else {
       setCouponError('Invalid coupon code. Try MOKSHA1000 or SENIORCARE.');
     }
+  };
+
+  const handleUpiConfirmed = (details: {
+    utrNumber: string;
+    paidAmount: number;
+    paymentMode: 'full' | 'advance' | 'custom';
+    paymentDate: string;
+  }) => {
+    const randomPnr = 'MG' + Math.floor(100000 + Math.random() * 900000);
+    const newBooking: Booking = {
+      id: 'bk-upi-' + Date.now(),
+      pnr: randomPnr,
+      serviceType,
+      title: bookingItem.title || bookingItem.name || bookingItem.airline || 'Moksha Reservation',
+      routeOrLocation: bookingItem.location || `${bookingItem.fromCity || 'Delhi'} → ${bookingItem.toCity || 'Varanasi'}`,
+      travelDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+      passengers: passengers.length > 0 && passengers[0].name ? passengers : [{ name: primaryName || 'Lead Traveler', age: 35, gender: 'male' }],
+      primaryContact: {
+        name: primaryName || 'Lead Traveler',
+        email: primaryEmail,
+        phone: primaryPhone
+      },
+      totalAmount: details.paidAmount,
+      discountApplied: discount,
+      promoCode: discount > 0 ? promoCode.toUpperCase() : undefined,
+      status: 'Confirmed',
+      bookedAt: new Date().toISOString(),
+      details: {
+        flightNumber: bookingItem.flightNumber,
+        airline: bookingItem.airline,
+        hotelName: bookingItem.name || bookingItem.destination,
+        yatraCircuit: `Paid ₹${details.paidAmount.toLocaleString('en-IN')} via Paytm UPI QR (UTR: ${details.utrNumber})`
+      }
+    };
+
+    setConfirmedBooking(newBooking);
+    onBookingSuccess(newBooking);
+    setStep('confirm');
   };
 
   const handleProcessPayment = (e: React.FormEvent) => {
@@ -371,11 +411,11 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               {/* Payment Methods */}
               <div>
                 <span className="text-xs font-bold uppercase text-slate-500 block mb-2">
-                  Select Payment Method (Simulation)
+                  Select Payment Method
                 </span>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-3 gap-2 mb-4">
                   {[
-                    { id: 'upi', label: '⚡ Instant UPI (GPay / PhonePe)' },
+                    { id: 'upi', label: '⚡ Official Paytm UPI QR (Instant)' },
                     { id: 'card', label: '💳 Credit / Debit Card' },
                     { id: 'netbanking', label: '🏦 Net Banking' },
                   ].map((m) => (
@@ -385,7 +425,7 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                       onClick={() => setPaymentMethod(m.id as any)}
                       className={`p-2.5 rounded-xl border text-xs font-semibold text-center transition-all cursor-pointer ${
                         paymentMethod === m.id
-                          ? 'bg-amber-50 border-amber-500 text-amber-900 ring-1 ring-amber-500'
+                          ? 'bg-amber-50 border-amber-500 text-amber-900 ring-1 ring-amber-500 font-bold'
                           : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
                       }`}
                     >
@@ -393,17 +433,33 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     </button>
                   ))}
                 </div>
+
+                {/* UPI QR Payment View */}
+                {paymentMethod === 'upi' && (
+                  <div className="pt-1">
+                    <UpiPaymentCard
+                      amount={finalTotal}
+                      packageTitle={bookingItem.title || bookingItem.name || 'Moksha Reservation'}
+                      customerName={primaryName}
+                      customerPhone={primaryPhone}
+                      allowAdvance={true}
+                      onPaymentConfirmed={handleUpiConfirmed}
+                    />
+                  </div>
+                )}
               </div>
 
-              {/* Confirm CTA */}
-              <button
-                type="submit"
-                id="confirm-booking-pay-btn"
-                className="w-full py-4 bg-gradient-to-r from-[#ff6a00] via-orange-600 to-[#ea580c] hover:from-orange-500 hover:to-[#ff6a00] text-white font-black text-sm rounded-xl shadow-xl shadow-orange-950/40 active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2"
-              >
-                <ShieldCheck className="w-5 h-5 text-white" />
-                <span>PAY ₹{finalTotal.toLocaleString('en-IN')} & GENERATE E-TICKET / DARSHAN PASS</span>
-              </button>
+              {/* Confirm CTA for Card & Netbanking */}
+              {paymentMethod !== 'upi' && (
+                <button
+                  type="submit"
+                  id="confirm-booking-pay-btn"
+                  className="w-full py-4 bg-gradient-to-r from-[#ff6a00] via-orange-600 to-[#ea580c] hover:from-orange-500 hover:to-[#ff6a00] text-white font-black text-sm rounded-xl shadow-xl shadow-orange-950/40 active:scale-98 transition-all cursor-pointer flex items-center justify-center gap-2"
+                >
+                  <ShieldCheck className="w-5 h-5 text-white" />
+                  <span>PAY ₹{finalTotal.toLocaleString('en-IN')} & GENERATE E-TICKET / DARSHAN PASS</span>
+                </button>
+              )}
             </form>
           ) : (
             /* Booking Confirmed State */
@@ -461,15 +517,21 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     </div>
                   </div>
 
+                  {confirmedBooking.details?.yatraCircuit && (
+                    <div className="p-2.5 bg-emerald-50 rounded-xl border border-emerald-200 text-xs text-emerald-900 font-semibold">
+                      Payment Note: {confirmedBooking.details.yatraCircuit}
+                    </div>
+                  )}
+
                   <div className="pt-3 border-t border-slate-200 flex items-center justify-between text-xs text-slate-500">
-                    <span>Moksha 24x7 Sevadar: 1800-MOKSHA</span>
-                    <span>IRCTC Partner Validated</span>
+                    <span>Moksha Desk: Shubham Kumar (+91 9334789099)</span>
+                    <span>UPI ID: 9334789099@pthdfc</span>
                   </div>
                 </div>
               )}
 
               {/* Action Buttons */}
-              <div className="flex items-center justify-center gap-3 pt-2">
+              <div className="flex flex-wrap items-center justify-center gap-2.5 pt-2">
                 <button
                   type="button"
                   onClick={() => window.print()}
@@ -479,10 +541,29 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                   <span>Print E-Ticket</span>
                 </button>
 
+                {confirmedBooking && (
+                  <a
+                    href={`https://wa.me/919334789099?text=${encodeURIComponent(
+                      `*Moksha Gateways - Booking & Payment Received*\n` +
+                      `PNR: ${confirmedBooking.pnr}\n` +
+                      `Package: ${confirmedBooking.title}\n` +
+                      `Traveler: ${confirmedBooking.primaryContact.name} (${confirmedBooking.primaryContact.phone})\n` +
+                      `Amount Paid: ₹${confirmedBooking.totalAmount.toLocaleString('en-IN')}\n` +
+                      `Status: Confirmed`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-4 py-2 bg-[#25D366] hover:bg-[#20bd5a] text-white font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer shadow-sm"
+                  >
+                    <MessageCircle className="w-4 h-4" />
+                    <span>WhatsApp Voucher (+91 9334789099)</span>
+                  </a>
+                )}
+
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-6 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-xs rounded-xl shadow-md cursor-pointer"
+                  className="px-5 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-xs rounded-xl shadow-md cursor-pointer"
                 >
                   Close & View in 'My Bookings'
                 </button>

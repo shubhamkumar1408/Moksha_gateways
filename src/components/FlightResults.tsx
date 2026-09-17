@@ -64,9 +64,9 @@ export const FlightResults: React.FC<FlightResultsProps> = ({
   }, [selectedAirlines, maxPrice, nonStopOnly, sortBy]);
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-6 sm:py-8 w-full min-w-0 max-w-full">
       {/* Route Header Banner */}
-      <div className="bg-white rounded-xl shadow-xs border border-slate-200 p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-white rounded-xl shadow-xs border border-slate-200 p-4 mb-6 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 w-full">
         <div>
           <div className="flex items-center gap-2 text-lg sm:text-xl font-extrabold text-slate-900">
             <span>{fromCityName || 'New Delhi'}</span>
@@ -205,12 +205,12 @@ export const FlightResults: React.FC<FlightResultsProps> = ({
               <div
                 key={flight.id}
                 id={`flight-card-${flight.id}`}
-                className="bg-white rounded-xl shadow-xs border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all p-5"
+                className="bg-white rounded-xl shadow-xs border border-slate-200 hover:border-amber-400 hover:shadow-md transition-all p-3.5 sm:p-5 w-full min-w-0"
               >
-                <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
+                <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6">
                   {/* Airline details */}
-                  <div className="flex items-center gap-3 min-w-[160px]">
-                    <div className="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center font-black text-sm shadow-xs">
+                  <div className="flex items-center gap-3 min-w-0 sm:min-w-[160px]">
+                    <div className="w-10 h-10 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center font-black text-sm shadow-xs shrink-0">
                       {flight.airlineLogo}
                     </div>
                     <div>
@@ -220,36 +220,36 @@ export const FlightResults: React.FC<FlightResultsProps> = ({
                   </div>
 
                   {/* Flight Schedule Times */}
-                  <div className="flex items-center justify-between sm:justify-start gap-6 sm:gap-10 flex-1">
+                  <div className="flex items-center justify-between sm:justify-start gap-3 sm:gap-10 flex-1">
                     {/* Departure */}
                     <div className="text-left">
-                      <div className="text-xl sm:text-2xl font-black text-slate-900">{flight.departureTime}</div>
+                      <div className="text-lg sm:text-2xl font-black text-slate-900">{flight.departureTime}</div>
                       <div className="text-xs font-bold text-slate-700">{flight.fromCode}</div>
-                      <div className="text-[11px] text-slate-400 truncate max-w-[110px]">{flight.fromCity}</div>
+                      <div className="text-[11px] text-slate-400 truncate max-w-[90px] sm:max-w-[110px]">{flight.fromCity}</div>
                     </div>
 
                     {/* Duration & Stops Indicator */}
                     <div className="flex flex-col items-center">
-                      <span className="text-[11px] text-slate-500 font-medium">{flight.duration}</span>
-                      <div className="w-24 sm:w-28 relative flex items-center justify-center my-1">
+                      <span className="text-[10px] sm:text-[11px] text-slate-500 font-medium">{flight.duration}</span>
+                      <div className="w-16 sm:w-28 relative flex items-center justify-center my-1">
                         <div className="w-full h-0.5 bg-slate-200" />
                         <Plane className="w-3.5 h-3.5 text-amber-500 absolute rotate-90" />
                       </div>
-                      <span className="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.2 rounded-full">
+                      <span className="text-[9px] sm:text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 sm:px-2 py-0.2 rounded-full">
                         {flight.stops === 0 ? 'Non-Stop' : `${flight.stops} Stop`}
                       </span>
                     </div>
 
                     {/* Arrival */}
                     <div className="text-right">
-                      <div className="text-xl sm:text-2xl font-black text-slate-900">{flight.arrivalTime}</div>
+                      <div className="text-lg sm:text-2xl font-black text-slate-900">{flight.arrivalTime}</div>
                       <div className="text-xs font-bold text-slate-700">{flight.toCode}</div>
-                      <div className="text-[11px] text-slate-400 truncate max-w-[110px]">{flight.toCity}</div>
+                      <div className="text-[11px] text-slate-400 truncate max-w-[90px] sm:max-w-[110px]">{flight.toCity}</div>
                     </div>
                   </div>
 
                   {/* Price & Book CTA */}
-                  <div className="flex items-center justify-between md:flex-col md:items-end md:justify-center border-t md:border-t-0 pt-3 md:pt-0 border-slate-100 min-w-[160px]">
+                  <div className="flex items-center justify-between md:flex-col md:items-end md:justify-center border-t md:border-t-0 pt-3 md:pt-0 border-slate-100 min-w-0 md:min-w-[160px]">
                     <div className="text-left md:text-right">
                       <div className="flex items-baseline gap-2 md:justify-end">
                         <span className="text-xs text-slate-400 line-through">₹{flight.originalPrice.toLocaleString('en-IN')}</span>

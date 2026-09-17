@@ -41,6 +41,22 @@ export interface DestinationVideo {
 
 export const POPULAR_DESTINATIONS: DestinationVideo[] = [
   {
+    id: 'kashmir-paradise',
+    name: '❄️ Kashmir & Dal Lake',
+    badge: 'Paradise on Earth',
+    tagline: 'Gondola snow peaks, houseboats & Betaab valley',
+    url: 'https://upload.wikimedia.org/wikipedia/commons/8/83/Snow-capped_Himalayan_mountains_Rasuwa.webm',
+    poster: './destinations/kashmir.jpg'
+  },
+  {
+    id: 'chakrata-retreat',
+    name: '🌲 Chakrata & Tiger Falls',
+    badge: 'Offbeat Uttarakhand',
+    tagline: 'Ancient deodars, 312ft falls & tranquil hills',
+    url: 'https://upload.wikimedia.org/wikipedia/commons/4/49/India_Unravelled.webm',
+    poster: './destinations/chakrata.jpg'
+  },
+  {
     id: 'spiti-himalayas',
     name: '🏔️ Spiti & Himalayas',
     badge: 'Popular Trek',
@@ -63,6 +79,14 @@ export const POPULAR_DESTINATIONS: DestinationVideo[] = [
     tagline: 'Kedarnath Dham, Badrinath & Varanasi',
     url: 'https://upload.wikimedia.org/wikipedia/commons/4/49/India_Unravelled.webm',
     poster: './destinations/kedarnath.jpg'
+  },
+  {
+    id: 'royal-rajasthan',
+    name: '🏰 Royal Rajasthan & Lakes',
+    badge: 'Desert & Heritage',
+    tagline: 'Udaipur, Jaisalmer & Mount Abu',
+    url: 'https://upload.wikimedia.org/wikipedia/commons/4/49/India_Unravelled.webm',
+    poster: './destinations/udaipur.jpg'
   },
   {
     id: 'bali-tropics',
@@ -238,7 +262,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
   };
 
   return (
-    <div className="relative pt-6 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden min-h-[620px]">
+    <div className="relative pt-4 sm:pt-6 pb-12 sm:pb-20 px-3 sm:px-6 lg:px-8 overflow-hidden min-h-[540px] sm:min-h-[620px] w-full max-w-full">
       {/* 1. Dynamic Destination Background Video */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
         <video
@@ -257,20 +281,20 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
 
         {/* Dual-layer Color Grading Overlay: Deep Navy + Brand Highlights */}
         <div className="absolute inset-0 bg-gradient-to-b from-[#081729]/85 via-[#0b1f36]/70 to-[#f4f7fb]" />
-        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[850px] h-[360px] bg-[#ff6a00]/20 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute -top-32 left-1/2 -translate-x-1/2 w-[90vw] max-w-[850px] h-[360px] bg-[#ff6a00]/20 rounded-full blur-3xl pointer-events-none" />
       </div>
 
-      <div className="max-w-6xl mx-auto relative z-10">
+      <div className="max-w-6xl mx-auto relative z-10 w-full min-w-0">
         {/* Popular Destination Video Selector Bar */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mb-4">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/70 backdrop-blur-md border border-white/20 text-white text-xs shadow-md">
-            <span className="w-2 h-2 rounded-full bg-[#ff6a00] animate-ping" />
-            <span className="text-slate-300 font-medium">Auto Destination Tour:</span>
-            <span className="text-[#ff6a00] font-extrabold">{activeDest.name}</span>
+        <div className="flex flex-wrap items-center justify-center gap-2 mb-4 w-full min-w-0">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-950/70 backdrop-blur-md border border-white/20 text-white text-xs shadow-md max-w-full truncate">
+            <span className="w-2 h-2 rounded-full bg-[#ff6a00] animate-ping shrink-0" />
+            <span className="text-slate-300 font-medium hidden xs:inline">Auto Destination Tour:</span>
+            <span className="text-[#ff6a00] font-extrabold truncate">{activeDest.name}</span>
             <span className="text-slate-400 text-[11px] hidden md:inline">• {activeDest.tagline}</span>
           </div>
 
-          <div className="flex flex-wrap items-center gap-1 bg-slate-950/70 backdrop-blur-md p-1 rounded-full border border-white/15 shadow-md">
+          <div className="flex items-center gap-1 bg-slate-950/70 backdrop-blur-md p-1 rounded-full border border-white/15 shadow-md overflow-x-auto no-scrollbar max-w-full">
             {POPULAR_DESTINATIONS.map((dest, idx) => (
               <button
                 key={dest.id}
@@ -304,7 +328,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                 setIsAutoRotate(!isAutoRotate);
                 setAutoProgress(0);
               }}
-              className={`p-1 px-2 text-xs rounded-full transition-colors flex items-center gap-1 cursor-pointer border-l border-white/20 ml-1 ${
+              className={`p-1 px-2 text-xs rounded-full transition-colors flex items-center gap-1 cursor-pointer border-l border-white/20 ml-1 shrink-0 ${
                 isAutoRotate
                   ? 'text-orange-400 hover:text-orange-300 hover:bg-white/15'
                   : 'text-slate-400 hover:text-white hover:bg-white/15'
@@ -322,7 +346,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
               type="button"
               id="toggle-video-play-btn"
               onClick={toggleVideoPlay}
-              className="p-1 px-2.5 text-slate-300 hover:text-white rounded-full hover:bg-white/15 text-xs transition-colors flex items-center gap-1 cursor-pointer ml-0.5"
+              className="p-1 px-2.5 text-slate-300 hover:text-white rounded-full hover:bg-white/15 text-xs transition-colors flex items-center gap-1 cursor-pointer ml-0.5 shrink-0"
               title={isVideoPlaying ? "Pause Video" : "Play Video"}
             >
               {isVideoPlaying ? (
@@ -342,20 +366,20 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
 
         {/* Hero Title & Subheading */}
         <div className="text-center mb-6">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-orange-200 text-xs font-bold mb-3 shadow-lg">
-            <Sparkles className="w-3.5 h-3.5 text-[#ff6a00]" />
-            <span>Sacred Yatras • Himalayan Treks • Curated Holiday Gateways</span>
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-orange-200 text-xs font-bold mb-3 shadow-lg max-w-full truncate">
+            <Sparkles className="w-3.5 h-3.5 text-[#ff6a00] shrink-0" />
+            <span className="truncate">Sacred Yatras • Himalayan Treks • Curated Holiday Gateways</span>
           </div>
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-white font-['Cinzel'] tracking-tight drop-shadow-md">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl font-extrabold text-white font-['Cinzel'] tracking-tight drop-shadow-md">
             Journey Beyond the Ordinary
           </h1>
-          <p className="mt-2 text-sm sm:text-base text-slate-200 max-w-2xl mx-auto drop-shadow-xs font-medium">
+          <p className="mt-2 text-xs sm:text-base text-slate-200 max-w-2xl mx-auto drop-shadow-xs font-medium px-2">
             Explore Spiti Valley, Leh Ladakh, Char Dham, Bali & Vietnam with verified passes, stays & 24x7 support.
           </p>
         </div>
 
         {/* The Signature MakeMyTrip Floating Search Box */}
-        <div className="bg-white rounded-2xl shadow-2xl shadow-slate-900/20 border border-slate-200/80 p-5 sm:p-7 transition-all">
+        <div className="bg-white rounded-2xl shadow-2xl shadow-slate-900/20 border border-slate-200/80 p-3.5 sm:p-7 transition-all w-full min-w-0 max-w-full">
           {/* Sub-selectors (Trip Type / Fare Category) */}
           <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100 mb-5">
             {activeService === 'flights' ? (
@@ -691,10 +715,10 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                     type="text"
                     value={hotelCity}
                     onChange={(e) => setHotelCity(e.target.value)}
-                    placeholder="e.g. Varanasi, Ayodhya, Rishikesh, Tirupati"
+                    placeholder="e.g. Udaipur, Jaisalmer, Mount Abu, Varanasi, Ayodhya"
                     className="text-xl font-extrabold text-slate-900 bg-transparent border-none focus:outline-hidden p-0 mt-1"
                   />
-                  <span className="text-xs text-amber-700 font-medium">Over 2,400+ Verified Ashrams & Luxury Resorts</span>
+                  <span className="text-xs text-amber-700 font-medium">Over 2,400+ Verified Ashrams, Heritage Haveli & Luxury Resorts</span>
                 </div>
 
                 <div className="md:col-span-3 p-3.5 rounded-xl border border-slate-200 hover:border-amber-500 hover:bg-amber-50/20 transition-all flex flex-col justify-between">
@@ -756,7 +780,14 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                     onChange={(e) => setHolidayDestination(e.target.value)}
                     className="text-xl font-extrabold text-slate-900 bg-transparent border-none focus:outline-hidden p-0 mt-1 cursor-pointer"
                   >
-                    <option value="All">All Curated Getaways (15 Packages)</option>
+                    <option value="All">All Curated Getaways (20 Packages)</option>
+                    <optgroup label="🏰 Royal Rajasthan">
+                      <option value="Udaipur">Udaipur Lake Palace & Pichola (3N/4D • ₹12,500)</option>
+                      <option value="Jaisalmer">Jaisalmer Fort & Sam Desert Dunes (3N/4D • ₹11,000)</option>
+                      <option value="Mount Abu">Mount Abu & Dilwara Temples (2N/3D • ₹8,500)</option>
+                      <option value="Udaipur Mount Abu">Udaipur & Mount Abu Combo (4N/5D • ₹16,800)</option>
+                      <option value="Rajasthan Grand">Royal Rajasthan Grand Circuit (7N/8D • ₹28,500)</option>
+                    </optgroup>
                     <optgroup label="Himachal Pradesh">
                       <option value="Spiti">Spiti Valley (6N/7D • ₹20,000)</option>
                       <option value="Manali Kasol">Manali Kasol (3N/4D • ₹7,000)</option>
@@ -866,9 +897,11 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                     className="text-lg font-extrabold text-slate-900 bg-transparent border-none focus:outline-hidden p-0 cursor-pointer"
                   >
                     <option>2 Yatris (Family / Couple)</option>
-                    <option>1 Yatri (Solo Pilgrimage)</option>
-                    <option>4-6 Yatris (Family Private AC Innova)</option>
-                    <option>10+ Yatris (Large Group / Tempo)</option>
+                    <option>1-4 Yatris (Maruti Dzire AC Sedan)</option>
+                    <option>4-6 Yatris (Toyota Innova Crysta / Ertiga)</option>
+                    <option>10-13 Yatris (Force Urbania Luxury Van)</option>
+                    <option>12-17 Yatris (Force Tempo Traveller)</option>
+                    <option>30-45 Yatris (Volvo Multi-Axle Luxury Bus Coach)</option>
                   </select>
                   <span className="text-xs text-slate-500">Senior citizen assistance provided</span>
                 </div>
@@ -932,13 +965,15 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
         <div className="mt-14 flex flex-wrap items-center justify-center gap-2 text-xs text-slate-600">
           <span className="font-semibold text-slate-700">Trending Now:</span>
           {[
+            { label: '🏰 Udaipur Lake Palace (3N/4D • ₹12,500)', service: 'holidays' },
+            { label: '🏜️ Jaisalmer Desert Glamping (3N/4D • ₹11,000)', service: 'holidays' },
+            { label: '⛰️ Mount Abu & Dilwara (2N/3D • ₹8,500)', service: 'holidays' },
             { label: '🏔️ Spiti Valley (6N/7D • ₹20,000)', service: 'holidays' },
             { label: '🏍️ Leh Ladakh (9N/10D • ₹35,000)', service: 'holidays' },
             { label: '🕉️ Char Dham (10N/11D • ₹23,500)', service: 'holidays' },
             { label: 'Kedarnath Yatra (3N/4D • ₹8,000)', service: 'holidays' },
             { label: '🏝️ Bali Island Retreat (6N/7D • ₹36,000)', service: 'holidays' },
             { label: '🏮 Vietnam Heritage (5N/6D • ₹38,000)', service: 'holidays' },
-            { label: 'Chopta Tungnath (2N/3D • ₹5,000)', service: 'holidays' },
             { label: 'Delhi ⇄ Varanasi (Kashi)', service: 'flights', from: 'DEL', to: 'VNS' },
           ].map((chip, idx) => (
             <button

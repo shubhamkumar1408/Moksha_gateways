@@ -1,5 +1,12 @@
 import { CityOption, Flight, Hotel, YatraPackage, HolidayPackage, Train, Cab, Offer } from '../types';
 
+import innovaImg from '../assets/images/innova_crysta_1789670001961.jpg';
+import ertigaImg from '../assets/images/ertiga_cab_1789670014761.jpg';
+import urbaniaImg from '../assets/images/force_urbania_1789670026934.jpg';
+import tempoImg from '../assets/images/tempo_traveller_1789670039197.jpg';
+import volvoImg from '../assets/images/volvo_bus_1789670054629.jpg';
+import dzireImg from '../assets/images/dzire_taxi_1789670067532.jpg';
+
 export const POPULAR_CITIES: CityOption[] = [
   { city: 'New Delhi', code: 'DEL', name: 'Indira Gandhi International Airport', state: 'Delhi' },
   { city: 'Varanasi', code: 'VNS', name: 'Lal Bahadur Shastri International Airport', state: 'Uttar Pradesh', isPilgrimage: true },
@@ -11,7 +18,10 @@ export const POPULAR_CITIES: CityOption[] = [
   { city: 'Srinagar', code: 'SXR', name: 'Sheikh ul-Alam International Airport', state: 'Jammu & Kashmir' },
   { city: 'Bengaluru', code: 'BLR', name: 'Kempegowda International Airport', state: 'Karnataka' },
   { city: 'Kochi', code: 'COK', name: 'Cochin International Airport', state: 'Kerala' },
-  { city: 'Jaipur', code: 'JAI', name: 'Jaipur International Airport', state: 'Rajasthan' },
+  { city: 'Jaipur', code: 'JAI', name: 'Jaipur International Airport (Pink City)', state: 'Rajasthan' },
+  { city: 'Udaipur', code: 'UDR', name: 'Maharana Pratap Airport (City of Lakes)', state: 'Rajasthan' },
+  { city: 'Jaisalmer', code: 'JSA', name: 'Jaisalmer Airport (Gateway to Thar Desert)', state: 'Rajasthan' },
+  { city: 'Jodhpur', code: 'JDH', name: 'Jodhpur Airport (The Blue City & Mehrangarh)', state: 'Rajasthan' },
   { city: 'Amritsar', code: 'ATQ', name: 'Sri Guru Ram Dass Jee Airport (Golden Temple)', state: 'Punjab', isPilgrimage: true },
   { city: 'Bodh Gaya', code: 'GAY', name: 'Gaya International Airport', state: 'Bihar', isPilgrimage: true }
 ];
@@ -241,24 +251,78 @@ export const MOCK_HOTELS: Hotel[] = [
   },
   {
     id: 'ht-5',
-    name: 'The Leela Palace, Udaipur',
+    name: 'The Leela Palace, Udaipur - Heritage Grand on Lake Pichola',
     city: 'Udaipur',
-    location: 'Lake Pichola, Udaipur',
+    location: 'Lake Pichola, Udaipur, Rajasthan',
     starRating: 5,
     userRating: 4.9,
     reviewsCount: 2100,
     pricePerNight: 36000,
     originalPrice: 42000,
-    image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?auto=format&fit=crop&w=800&q=80',
-    amenities: ['Lake View Suites', 'Royal Boat Arrival', 'Ayurvedic Spa', 'Bespoke Dining'],
-    spiritualHighlights: 'Sunset boat cruise to Jag Mandir with heritage flute melodies.',
-    distanceToTemple: 'Near historic Jagdish Mandir',
+    image: './destinations/udaipur.jpg',
+    amenities: ['Lake View Suites', 'Royal Boat Arrival', 'Ayurvedic Spa', 'Bespoke Mewari Dining', 'Private Balcony'],
+    spiritualHighlights: 'Sunset boat cruise to Jag Mandir with heritage flute melodies and Jagdish Mandir morning aarti.',
+    distanceToTemple: '500 meters to historic Jagdish Mandir',
     satvikFood: true,
     freeCancellation: true,
-    badge: 'Royal Holiday Getaway'
+    badge: 'Royal Palace Luxury'
   },
   {
     id: 'ht-6',
+    name: 'Suryagarh Jaisalmer - Luxury Desert Fortress',
+    city: 'Jaisalmer',
+    location: 'Kahala Phata, Sam Road, Jaisalmer, Rajasthan',
+    starRating: 5,
+    userRating: 4.9,
+    reviewsCount: 1740,
+    pricePerNight: 22000,
+    originalPrice: 28000,
+    image: './destinations/jaisalmer.jpg',
+    amenities: ['Desert Dune Safari', 'Folk Music & Kalbeliya Dance', 'Royal Courtyard Dining', 'Rait Spa & Heated Pool', 'Stargazing'],
+    spiritualHighlights: 'Traditional Rajasthani temple morning chanting and ancient cenotaph trails.',
+    distanceToTemple: '15 mins drive to UNESCO Jaisalmer Sonar Qila',
+    satvikFood: true,
+    freeCancellation: true,
+    badge: 'Golden City Luxury Fortress'
+  },
+  {
+    id: 'ht-7',
+    name: 'WelcomHeritage Connaught House, Mount Abu',
+    city: 'Mount Abu',
+    location: 'Rajendra Marg, Near Nakki Lake, Mount Abu, Rajasthan',
+    starRating: 4,
+    userRating: 4.8,
+    reviewsCount: 920,
+    pricePerNight: 8200,
+    originalPrice: 10500,
+    image: './destinations/mount_abu.jpg',
+    amenities: ['English Heritage Cottage', 'Sprawling Mountain Lawns', 'Satvik Multi-Cuisine Dining', 'Bonfire & Sit-outs', 'Near Nakki Lake'],
+    spiritualHighlights: 'Special escorted morning tours to Dilwara Jain Temple complex.',
+    distanceToTemple: '2.5 km to Dilwara Jain Temples • 800m to Nakki Lake',
+    satvikFood: true,
+    freeCancellation: true,
+    badge: 'Heritage Hill Station Retreat'
+  },
+  {
+    id: 'ht-8',
+    name: 'Hotel Hilltone & Suites, Mount Abu',
+    city: 'Mount Abu',
+    location: 'Post Box No. 18, Opp. Nakki Lake Entry, Mount Abu, Rajasthan',
+    starRating: 4,
+    userRating: 4.7,
+    reviewsCount: 1150,
+    pricePerNight: 6400,
+    originalPrice: 8500,
+    image: './destinations/dilwara.jpg',
+    amenities: ['Swimming Pool & Gardens', 'Walking Distance to Nakki Lake', 'Pure Veg Dining', 'Ayurveda Spa', 'Kids Activity Zone'],
+    spiritualHighlights: 'Daily shuttle to Dilwara Temples and Gaumukh Ashram.',
+    distanceToTemple: '500m to Nakki Lake & Toad Rock',
+    satvikFood: true,
+    freeCancellation: true,
+    badge: 'Best Seller Near Nakki Lake'
+  },
+  {
+    id: 'ht-9',
     name: 'Radisson Blu Resort, Cavelossim Beach, Goa',
     city: 'Goa',
     location: 'Cavelossim Beach, South Goa',
@@ -274,6 +338,60 @@ export const MOCK_HOTELS: Hotel[] = [
     satvikFood: false,
     freeCancellation: true,
     badge: 'Relaxation Retreat'
+  },
+  {
+    id: 'ht-10',
+    name: 'Heritage Cedar Palace Houseboat & Resort, Srinagar',
+    city: 'Srinagar',
+    location: 'Dal Lake Boulevard Road, Srinagar, Kashmir',
+    starRating: 5,
+    userRating: 4.95,
+    reviewsCount: 1480,
+    pricePerNight: 8500,
+    originalPrice: 11800,
+    image: './destinations/kashmir.jpg',
+    amenities: ['Floating Dal Lake Cedar Houseboat', 'Private Shikara Crossing', 'Traditional Kashmiri Wazwan Dining', 'Carved Walnut Wood Suites', 'Kahwa Welcome'],
+    spiritualHighlights: 'Morning Shikara floating flower market and peaceful Hazratbal Dargah & Shankaracharya Temple darshan.',
+    distanceToTemple: 'Direct Dal Lake mooring • 10 mins to Shankaracharya Temple',
+    satvikFood: true,
+    freeCancellation: true,
+    badge: 'Dal Lake Icon'
+  },
+  {
+    id: 'ht-11',
+    name: 'The Khyber Himalayan Resort & Spa, Gulmarg',
+    city: 'Gulmarg',
+    location: 'Near Gulmarg Gondola Phase 1, Gulmarg, Kashmir',
+    starRating: 5,
+    userRating: 4.93,
+    reviewsCount: 1220,
+    pricePerNight: 24500,
+    originalPrice: 31000,
+    image: './destinations/gulmarg.jpg',
+    amenities: ['Heated Indoor Ozone Pool', 'Walking Distance to Gondola', 'L’Occitane Luxury Spa', 'Snow Mountain Panorama', 'Ski Concierge'],
+    spiritualHighlights: 'High-altitude Apharwat mountain tranquility and visit to ancient Maharani Temple.',
+    distanceToTemple: 'Walking distance to Gulmarg Gondola & Maharani Mandir',
+    satvikFood: true,
+    freeCancellation: true,
+    badge: 'Luxury Ski Resort'
+  },
+  {
+    id: 'ht-12',
+    name: 'Tiger Falls Eco Pine Resort & Alpine Camps, Chakrata',
+    city: 'Chakrata',
+    location: 'Near Tiger Falls Road, Chakrata, Dehradun, Uttarakhand',
+    starRating: 4,
+    userRating: 4.88,
+    reviewsCount: 680,
+    pricePerNight: 4200,
+    originalPrice: 5800,
+    image: './destinations/chakrata.jpg',
+    amenities: ['Pine Forest View Cottages', 'Tiger Falls Guided Trek', 'Stargazing Bonfire', 'Pahari Organic Meals', 'Mountain Stream Dip'],
+    spiritualHighlights: 'Untouched ancient deodar woods, Mahasu Devta temple visits, and Chilmiri peak meditation.',
+    distanceToTemple: '3 km to Tiger Falls • 15 mins to Mahasu Devta Temple',
+    satvikFood: true,
+    freeCancellation: true,
+    badge: 'Offbeat Nature Sanctuary'
   }
 ];
 
@@ -547,6 +665,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Spiti Valley Road Trip & High Altitude Exploration',
     destination: 'Kaza • Tabo • Chandratal Lake • Kibber • Kunzum Pass',
     location: 'Spiti Valley, Himachal Pradesh, India',
+    region: 'Himachal Pradesh • Lahaul & Spiti',
+    reasonToVisit: 'Cold desert moonscapes, 1,000-year-old cliffside Key Gompa, turquoise Chandratal Lake camping, and the world’s highest post office at Hikkim.',
     duration: '6 Nights / 7 Days',
     nights: 6,
     days: 7,
@@ -584,6 +704,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Leh Ladakh Grand Odyssey - Lakes & High Passes',
     destination: 'Leh • Pangong Tso • Nubra Valley • Khardung La • Magnetic Hill',
     location: 'Leh & Ladakh (UT), India',
+    region: 'Ladakh UT • Trans-Himalayas',
+    reasonToVisit: 'Epic high-altitude mountain passes (Khardung La 17,982 ft), otherworldly blue Pangong Tso lake, double-hump Bactrian camel dunes, and ancient Buddhist gompas.',
     duration: '9 Nights / 10 Days',
     nights: 9,
     days: 10,
@@ -624,6 +746,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Char Dham Complete Sacred Pilgrimage Yatra',
     destination: 'Yamunotri • Gangotri • Kedarnath • Badrinath • Haridwar',
     location: 'Garhwal Himalayas (Yamunotri, Gangotri, Kedarnath, Badrinath), Uttarakhand, India',
+    region: 'Uttarakhand • Garhwal Himalayas',
+    reasonToVisit: 'The supreme Hindu pilgrimage circuit washing away sins across holy Yamunotri, Gangotri, Kedarnath Jyotirlinga, and Badrinath Dham.',
     duration: '10 Nights / 11 Days',
     nights: 10,
     days: 11,
@@ -665,6 +789,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Manali & Kasol Parvati Valley Mountain Getaway',
     destination: 'Solang Valley • Old Manali • Kasol • Manikaran Sahib Gurudwara',
     location: 'Kullu & Parvati Valley, Himachal Pradesh, India',
+    region: 'Himachal Pradesh • Kullu & Parvati Valley',
+    reasonToVisit: 'Snow adventure sports at Solang Valley, soothing hot sulfur mineral springs at Manikaran Sahib, and peaceful riverside cafes along the gushing Parvati River.',
     duration: '3 Nights / 4 Days',
     nights: 3,
     days: 4,
@@ -699,6 +825,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Jibhi & Sojha Tirthan Valley Offbeat Retreat',
     destination: 'Jibhi Waterfall • Jalori Pass • Serolsar Lake • Sojha Pine Woods',
     location: 'Tirthan Valley, Himachal Pradesh, India',
+    region: 'Himachal Pradesh • Tirthan Valley',
+    reasonToVisit: 'Pristine untouched pine woodlands, 360-degree high mountain panorama from Jalori Pass (10,800 ft), hike to sacred Serolsar Lake, and cozy wooden chalets.',
     duration: '2 Nights / 3 Days',
     nights: 2,
     days: 3,
@@ -732,6 +860,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Kedarnath Dham Pilgrimage & Jyotirlinga Yatra',
     destination: 'Haridwar / Rishikesh • Sonprayag • Gaurikund • Kedarnath Mandir',
     location: 'Kedarnath Dham, Rudraprayag District, Uttarakhand, India',
+    region: 'Uttarakhand • Garhwal Himalayas',
+    reasonToVisit: 'One of the 12 supreme Jyotirlingas of Lord Shiva nestled at 11,755 ft surrounded by snow-capped peaks and the sacred Mandakini river.',
     duration: '3 Nights / 4 Days',
     nights: 3,
     days: 4,
@@ -766,6 +896,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Chopta Tungnath & Chandrashila Peak Trek',
     destination: 'Chopta Meadows • Tungnath Temple • Chandrashila Peak • Deoria Tal',
     location: 'Chopta & Tungnath, Rudraprayag & Chamoli, Uttarakhand, India',
+    region: 'Uttarakhand • Garhwal Himalayas',
+    reasonToVisit: 'Mini Switzerland of India, home to the world’s highest Shiva temple (Tungnath 3,680m) and the iconic 360-degree Chandrashila summit sunrise.',
     duration: '2 Nights / 3 Days',
     nights: 2,
     days: 3,
@@ -799,6 +931,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Valley of Flowers & Hemkund Sahib Trek',
     destination: 'Govindghat • Ghangaria • Valley of Flowers National Park • Hemkund Sahib',
     location: 'Valley of Flowers & Hemkund Sahib, Chamoli, Uttarakhand, India',
+    region: 'Uttarakhand • Chamoli Himalayas',
+    reasonToVisit: 'UNESCO World Heritage site with over 500 varieties of blooming Himalayan alpine wildflowers and the sacred high-altitude Sikh pilgrimage of Sri Hemkund Sahib (15,200 ft).',
     duration: '5 Nights / 6 Days',
     nights: 5,
     days: 6,
@@ -835,6 +969,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Mcleodganj & Dharamshala Tibetan Cultural Getaway',
     destination: 'Tsuglagkhang Dalai Lama Temple • Bhagsu Falls • Dharamkot • Triund Base',
     location: 'Mcleodganj, Kangra District, Himachal Pradesh, India',
+    region: 'Himachal Pradesh • Kangra Valley',
+    reasonToVisit: 'Spiritual seat of His Holiness the Dalai Lama, authentic Tibetan monasteries, vibrant cafe culture of Dharamkot, and majestic Dhauladhar snow ridges.',
     duration: '2 Nights / 3 Days',
     nights: 2,
     days: 3,
@@ -868,6 +1004,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Kedarkantha Winter Summit Snow Trek',
     destination: 'Sankri Base Village • Juda Ka Talab • Kedarkantha Base Camp • 12,500ft Summit',
     location: 'Sankri, Uttarkashi District, Uttarakhand, India',
+    region: 'Uttarakhand • Govind Pashu Vihar',
+    reasonToVisit: 'India’s premier beginner-friendly winter snow trek featuring camp stays on the frozen Juda Ka Talab lake and unmatched 360-degree summit views from 12,500 ft.',
     duration: '4 Nights / 5 Days',
     nights: 4,
     days: 5,
@@ -903,6 +1041,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Hampta Pass & Chandratal High Mountain Crossover Trek',
     destination: 'Manali • Jobra • Chika • Balu Ka Ghera • Hampta Pass (14,065 ft) • Chandratal',
     location: 'Hampta Pass & Chandratal, Pir Panjal, Himachal Pradesh, India',
+    region: 'Himachal Pradesh • Pir Panjal & Lahaul',
+    reasonToVisit: 'Dramatic landscape transformation from lush pine forests of Kullu to the stark arid desert moonscapes of Lahaul, crowned by high Hampta Pass (14,065 ft) and Chandratal.',
     duration: '5 Nights / 6 Days',
     nights: 5,
     days: 6,
@@ -941,6 +1081,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Exotic Vietnam - Halong Bay Luxury Cruise & Golden Hand Bridge',
     destination: 'Hanoi Old Quarter • Halong Bay Overnight Cruise • Da Nang • Ba Na Hills • Hoi An',
     location: 'Hanoi, Halong Bay & Da Nang, Vietnam',
+    region: 'International • Southeast Asia',
+    reasonToVisit: '5-star cruise through limestone karsts in Halong Bay, walking the iconic Golden Bridge held by colossal stone hands at Ba Na Hills, and lantern-lit evenings in UNESCO Hoi An.',
     duration: '5 Nights / 6 Days',
     nights: 5,
     days: 6,
@@ -977,6 +1119,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Vibrant Thailand - Bangkok Palaces & Pattaya Coral Island',
     destination: 'Bangkok Temples • Wat Arun • Pattaya Coral Island • Chao Phraya Cruise',
     location: 'Bangkok & Pattaya, Thailand',
+    region: 'International • Southeast Asia',
+    reasonToVisit: 'Pristine turquoise waters and water sports at Pattaya Coral Island, Chao Phraya river luxury dinner cruise, and shimmering Buddhist temples of Wat Arun & Wat Pho.',
     duration: '4 Nights / 5 Days',
     nights: 4,
     days: 5,
@@ -1012,6 +1156,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Magical Bali - Island of Gods, Temples & Nusa Penida',
     destination: 'Ubud Cultural Heartland • Kuta Beach • Nusa Penida Island • Tanah Lot',
     location: 'Ubud, Kuta & Nusa Penida, Bali, Indonesia',
+    region: 'International • Southeast Asia',
+    reasonToVisit: 'Exotic private pool villas in lush Ubud jungles, iconic T-Rex cliff at Nusa Penida, spiritual clifftop Kecak dance at Uluwatu, and dramatic sunset over Tanah Lot sea temple.',
     duration: '6 Nights / 7 Days',
     nights: 6,
     days: 7,
@@ -1049,6 +1195,8 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     title: 'Mystical Bhutan - Land of Thunder Dragon & Tiger\'s Nest',
     destination: 'Paro Valley • Tiger\'s Nest Monastery • Thimphu • Punakha Dzong',
     location: 'Paro, Thimphu & Punakha, Kingdom of Bhutan',
+    region: 'International • Eastern Himalayas',
+    reasonToVisit: 'Cliff-hanging Tiger’s Nest monastery (Paro Taktsang), Gross National Happiness philosophy, Dochula Pass Himalayan vistas, and pristine Buddhist dzongs.',
     duration: '5 Nights / 6 Days',
     nights: 5,
     days: 6,
@@ -1076,6 +1224,385 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
       { day: 4, title: 'Punakha to Paro Valley', description: 'Drive to beautiful Paro valley, visit Ta Dzong (National Museum) and Rinpung Dzong.' },
       { day: 5, title: 'Hike to Majestic Tiger\'s Nest (Paro Taktsang)', description: 'Sacred pilgrimage hike to the cliffside Tiger\'s Nest Monastery, prayer flags and herbal bath.' },
       { day: 6, title: 'Farewell Bhutan Departure', description: 'Tashi Delek! Transfer to Paro International Airport for onward journey.' }
+    ]
+  },
+
+  // 16. Udaipur (3N/4D, Price 12500)
+  {
+    id: 'hol-udaipur',
+    title: 'Udaipur Royal Heritage & Lake Palace Odyssey',
+    destination: 'City Palace • Lake Pichola Cruise • Jag Mandir • Saheliyon Ki Bari • Sajjangarh Monsoon Palace',
+    location: 'Udaipur, Mewar, Rajasthan, India',
+    region: 'Rajasthan • Mewar Royal Region',
+    reasonToVisit: 'Venice of the East, famed for private sunset motorboat cruises on Lake Pichola, glowing Lake Palace, colossal City Palace, and vibrant heritage havelis.',
+    duration: '3 Nights / 4 Days',
+    nights: 3,
+    days: 4,
+    rating: 4.95,
+    reviewsCount: 1380,
+    price: 12500,
+    originalPrice: 16500,
+    image: './destinations/udaipur.jpg',
+    theme: 'Royal Heritage & Lakes',
+    category: 'rajasthan',
+    isInternational: false,
+    badge: 'City of Lakes 3N/4D ₹12,500',
+    tags: ['Lake Pichola Boat Cruise', 'City Palace Tour', 'Sajjangarh Sunset', 'Jagdish Temple Darshan', 'Bagore Ki Haveli Folk Show'],
+    highlights: [
+      '3 Nights / 4 Days royal Mewar escape at flat ₹12,500 with heritage stays',
+      'Private sunset motorboat cruise on Lake Pichola passing Lake Palace & Jag Mandir',
+      'Guided VIP access to grand Udaipur City Palace, crystal gallery, and vintage car collection',
+      'Attend evening Dharohar folk dance and musical performance at historic Bagore Ki Haveli'
+    ],
+    inclusions: [
+      '3 Nights stay in 4-star lake-view heritage haveli hotel',
+      'Daily Royal Mewari Breakfast & Chef Dinner',
+      'Private AC Sedan for all transfers and city sightseeing',
+      'Lake Pichola boat cruise tickets with life jackets',
+      'City Palace entry and authorized heritage guide'
+    ],
+    itinerary: [
+      { day: 1, title: 'Arrival in Udaipur & Sunset Lake Pichola Boat Cruise', description: 'VIP pickup from Udaipur airport/station, check-in to heritage haveli. Evening private sunset boat cruise on Lake Pichola with views of illuminated Lake Palace and Jag Mandir.' },
+      { day: 2, title: 'City Palace, Jagdish Temple & Bagore Ki Haveli', description: 'Explore the monumental City Palace complex overlooking Lake Pichola. Visit ancient 1651 AD Jagdish Vishnu Temple and enjoy the evening vibrant Rajasthani cultural folk dance at Bagore Ki Haveli.' },
+      { day: 3, title: 'Saheliyon Ki Bari, Fateh Sagar & Sajjangarh Monsoon Palace', description: 'Morning walk through lush fountains of Saheliyon Ki Bari, drive along scenic Fateh Sagar Lake, and ascend to hilltop Sajjangarh (Monsoon Palace) for sweeping panoramic sunset vistas over the Aravalli hills.' },
+      { day: 4, title: 'Old City Bazaars & Departure', description: 'Stroll through Bapu Bazaar and Hathi Pol for miniature paintings, silver jewellery, and authentic Rajasthani handicrafts before airport/station transfer.' }
+    ]
+  },
+
+  // 17. Jaisalmer (3N/4D, Price 11000)
+  {
+    id: 'hol-jaisalmer',
+    title: 'Jaisalmer Golden Fort & Thar Desert Safari Glamping',
+    destination: 'Sonar Qila (Golden Fort) • Sam Sand Dunes Camel Safari • Patwon Ki Haveli • Gadisar Lake • Desert Camping',
+    location: 'Jaisalmer & Thar Desert, Rajasthan, India',
+    region: 'Rajasthan • Thar Desert Region',
+    reasonToVisit: 'Living Golden Fort (Sonar Qila) made of glowing yellow sandstone, exhilarating 4x4 dune bashing, camel treks, and stargazing in luxury Thar desert Swiss tents.',
+    duration: '3 Nights / 4 Days',
+    nights: 3,
+    days: 4,
+    rating: 4.94,
+    reviewsCount: 1120,
+    price: 11000,
+    originalPrice: 14800,
+    image: './destinations/jaisalmer.jpg',
+    theme: 'Thar Desert Safari & Living Fort',
+    category: 'rajasthan',
+    isInternational: false,
+    badge: 'Desert Glamping 3N/4D ₹11,000',
+    tags: ['Sam Sand Dunes Camp', 'Camel & 4x4 Jeep Dune Bashing', 'Living Golden Fort (Sonar Qila)', 'Kalbeliya Folk Night & Campfire', 'Gadisar Lake Sunset'],
+    highlights: [
+      '3 Nights / 4 Days golden desert exploration at flat ₹11,000',
+      'Luxury Swiss tent camping amidst the golden dunes of Sam with attached modern baths',
+      'Thrilling 4x4 Jeep dune bashing and sunset camel ride across the Thar desert',
+      'Walking tour of UNESCO Sonar Qila—one of the world\'s few functioning living forts'
+    ],
+    inclusions: [
+      '2 Nights boutique hotel in Jaisalmer + 1 Night Luxury Swiss Desert Camp at Sam',
+      'All Breakfasts, traditional Rajasthani buffet dinners & evening high tea',
+      'Sunset camel safari & Jeep dune safari across Thar dunes',
+      'Evening musical Kalbeliya dance show, traditional welcome with dhol, and campfire',
+      'Private AC cab for all Jaisalmer city tours and desert transfers'
+    ],
+    itinerary: [
+      { day: 1, title: 'Arrival in Jaisalmer & Serene Gadisar Lake', description: 'Arrive in the Golden City, check-in to golden sandstone hotel. Evening visit to sacred 14th-century Gadisar Lake with ornate stone chhatris and laser light show.' },
+      { day: 2, title: 'Sonar Qila (Jaisalmer Fort) & Intricate Havelis', description: 'Explore Sonar Qila, Jain temple complex with centuries-old yellow sandstone carvings, the grand Patwon Ki Haveli, and Salim Singh Ki Haveli with its peacock roof.' },
+      { day: 3, title: 'Kuldhara Ghost Village & Sam Sand Dunes Luxury Camping', description: 'Visit mystical abandoned village of Kuldhara. Proceed to Sam Sand Dunes; receive traditional royal Rajasthani tikka welcome. Embark on camel ride into glowing sunset dunes, 4x4 dune bashing, and relish evening Kalbeliya folk dance around bonfire.' },
+      { day: 4, title: 'Desert Sunrise & Farewell Jaisalmer', description: 'Witness magical desert sunrise over golden ripples. Enjoy hot masala chai and kachori breakfast, followed by departure transfer.' }
+    ]
+  },
+
+  // 18. Mount Abu (2N/3D, Price 8500)
+  {
+    id: 'hol-mount-abu',
+    title: 'Mount Abu Tranquil Hill Retreat & Dilwara Marble Temples',
+    destination: 'Nakki Lake • Dilwara Jain Temples • Guru Shikhar (1,722m) • Toad Rock • Sunset Point',
+    location: 'Mount Abu, Sirohi District, Rajasthan, India',
+    region: 'Rajasthan • Aravalli Hill Range',
+    reasonToVisit: 'Rajasthan’s solitary hill station offering refreshing mountain air, mythological Nakki Lake boating, the highest Aravalli peak Guru Shikhar, and pristine Dilwara marble temples.',
+    duration: '2 Nights / 3 Days',
+    nights: 2,
+    days: 3,
+    rating: 4.89,
+    reviewsCount: 960,
+    price: 8500,
+    originalPrice: 11500,
+    image: './destinations/mount_abu.jpg',
+    theme: 'Rajasthan Only Hill Station',
+    category: 'rajasthan',
+    isInternational: false,
+    badge: 'Hill Station Escape 2N/3D ₹8,500',
+    tags: ['Dilwara Marble Architecture', 'Nakki Lake Boating', 'Guru Shikhar 5,650ft', 'Toad Rock Hike', 'Peaceful Aravalli Hills'],
+    highlights: [
+      '2 Nights / 3 Days refreshing hill retreat in the cool Aravallis at flat ₹8,500',
+      'Marvel at the world-renowned Dilwara Temples with 11th-century pure white marble carvings',
+      'Evening swan pedal boating on mythological Nakki Lake surrounded by granite boulders',
+      'Stand at Guru Shikhar—the highest summit in the entire Aravalli mountain range (1,722m)'
+    ],
+    inclusions: [
+      '2 Nights stay in pine-fringed colonial resort / deluxe valley hotel',
+      'Daily Breakfast & Dinner with authentic Gujarati & Rajasthani satvik options',
+      'Private AC vehicle for all sightseeing including Guru Shikhar and Dilwara Temples',
+      'Nakki Lake boating passes included'
+    ],
+    itinerary: [
+      { day: 1, title: 'Arrival at Mount Abu & Nakki Lake Evening', description: 'Drive up winding scenic Aravalli ghats from Abu Road. Check into resort. Evening stroll around serene Nakki Lake, boating, and scenic sunset from Sunset Point.' },
+      { day: 2, title: 'Dilwara Marble Temples, Toad Rock & Achalgarh Fort', description: 'Morning spiritual visit to world-famous Dilwara Jain Temples with peerless lace-like marble craftsmanship. Hike up to unique Toad Rock rock formation, visit Achalgarh Fort and ancient Achaleshwar Mahadev Temple.' },
+      { day: 3, title: 'Guru Shikhar Peak Summit & Departure', description: 'Drive to Guru Shikhar peak (1,722 m) for 360-degree clouds and valley view, visit Dattatreya shrine, browse local market for Rajasthani quilts and honey, and transfer to Abu Road station.' }
+    ]
+  },
+
+  // 19. Udaipur & Mount Abu Combo (4N/5D, Price 16800)
+  {
+    id: 'hol-udaipur-mount-abu',
+    title: 'Udaipur & Mount Abu Royal Combo - Lakes, Palaces & Mountain Oasis',
+    destination: 'Udaipur Lake Pichola (2N) • Ranakpur Marble Temple • Mount Abu Nakki Lake (2N) • Dilwara Temples',
+    location: 'Udaipur & Mount Abu, Southern Rajasthan, India',
+    region: 'Rajasthan • Mewar & Aravalli Hills',
+    reasonToVisit: 'The ultimate royal twin getaway combining royal waterfront palace splendour in Udaipur with cool forested mountain vistas and Dilwara architectural marvels in Mount Abu.',
+    duration: '4 Nights / 5 Days',
+    nights: 4,
+    days: 5,
+    rating: 4.96,
+    reviewsCount: 1640,
+    price: 16800,
+    originalPrice: 22500,
+    image: './destinations/dilwara.jpg',
+    theme: 'Royal Lakes & Hill Sanctuary',
+    category: 'rajasthan',
+    isInternational: false,
+    badge: 'Best Seller Combo 4N/5D ₹16,800',
+    tags: ['2N Udaipur + 2N Mount Abu', 'Lake Pichola Cruise', 'Ranakpur 1444 Pillars', 'Dilwara Marble Sanctum', 'Guru Shikhar Peak'],
+    highlights: [
+      '4 Nights / 5 Days seamless combination of romantic lake palaces and peaceful hill retreat at ₹16,800',
+      'Stay 2 Nights in Lake City Udaipur and 2 Nights in refreshing hill station Mount Abu',
+      'Enroute stop at Ranakpur Sun & Jain temple featuring 1,444 uniquely carved marble pillars',
+      'Lake Pichola royal boat cruise and Nakki Lake sunset pedal boating included'
+    ],
+    inclusions: [
+      '2 Nights Udaipur Heritage Hotel + 2 Nights Mount Abu Hill Resort',
+      'Daily Buffet Breakfast and Gourmet Dinners',
+      'All private intercity and local sightseeing transfers in dedicated AC Sedan / Ertiga',
+      'Boat cruise tickets at Lake Pichola and entry assistance at all monuments'
+    ],
+    itinerary: [
+      { day: 1, title: 'Arrival in Udaipur & Evening Lake Promenade', description: 'Arrive in Udaipur, check-in to heritage lake-view hotel. Evening leisure walk around Lake Pichola and Ambrai Ghat with view of glowing palaces.' },
+      { day: 2, title: 'Udaipur City Palace & Sunset Boat Cruise', description: 'Full day exploring City Palace, Crystal Gallery, Jagdish Mandir, and Saheliyon Ki Bari. Evening romantic sunset boat cruise on Lake Pichola.' },
+      { day: 3, title: 'Udaipur to Mount Abu via Ranakpur Temple', description: 'Scenic drive through the lush Aravalli hills, stop at magnificent Ranakpur Jain Temple marveling at its 1,444 carved marble pillars, ascend to Mount Abu, and evening relax at Nakki Lake.' },
+      { day: 4, title: 'Mount Abu Dilwara Temples & Guru Shikhar', description: 'Morning guided tour of historic Dilwara Temples with exquisite marble ceilings. Drive up to Guru Shikhar peak (1,722m), visit Toad Rock, and evening sunset from Honeymoon Point.' },
+      { day: 5, title: 'Mount Abu to Udaipur / Abu Road Departure', description: 'Morning breakfast with mountain breeze, shopping in local bazaars, and drop to Abu Road Station or Udaipur Airport.' }
+    ]
+  },
+
+  // 20. Royal Rajasthan Grand Circuit (7N/8D, Price 28500)
+  {
+    id: 'hol-rajasthan-grand',
+    title: 'Royal Rajasthan Grand Odyssey - Jaipur • Jodhpur • Jaisalmer • Udaipur',
+    destination: 'Jaipur Pink City (2N) • Jodhpur Blue City (1N) • Jaisalmer Desert Camp (2N) • Udaipur City of Lakes (2N)',
+    location: 'Jaipur, Jodhpur, Jaisalmer & Udaipur, Rajasthan, India',
+    region: 'Rajasthan • Grand Royal Circuit',
+    reasonToVisit: 'The ultimate royal expedition across Rajasthan’s 4 greatest cities: Jaipur Pink City forts, Jodhpur Blue City bastions, Jaisalmer golden desert dunes, and Udaipur royal lakes.',
+    duration: '7 Nights / 8 Days',
+    nights: 7,
+    days: 8,
+    rating: 4.97,
+    reviewsCount: 2180,
+    price: 28500,
+    originalPrice: 36000,
+    image: './destinations/rajasthan.jpg',
+    theme: 'Grand Royal Circuit',
+    category: 'rajasthan',
+    isInternational: false,
+    badge: 'Ultimate Rajasthan 7N/8D ₹28,500',
+    tags: ['Amber Fort Elephant Ride', 'Mehrangarh Fort Jodhpur', 'Sam Dunes Desert Glamping', 'Udaipur Lake Pichola Cruise', 'All 4 Iconic Cities'],
+    highlights: [
+      '7 Nights / 8 Days comprehensive grand circuit across all four iconic jewels of Rajasthan at ₹28,500',
+      'Jaipur Pink City (Hawa Mahal, Amer Fort) + Jodhpur Blue City (Mehrangarh Fort)',
+      'Jaisalmer Golden Fort + overnight Thar desert Swiss tent glamping with camel safari',
+      'Udaipur romantic City of Lakes with private Lake Pichola boat cruise'
+    ],
+    inclusions: [
+      '7 Nights stays in curated 4-star heritage palaces and desert luxury Swiss camps',
+      'All 7 Daily Breakfasts and 7 Royal Dinners included',
+      'Dedicated AC vehicle throughout the entire 8-day tour with interstate tolls & parking',
+      'Camel safari, desert folk dance show, and Lake Pichola boat tickets'
+    ],
+    itinerary: [
+      { day: 1, title: 'Arrival in Jaipur - The Pink City', description: 'Welcome to Jaipur, check-in to heritage hotel. Evening visit to Birla Mandir and Chokhi Dhani cultural village.' },
+      { day: 2, title: 'Jaipur Forts & Palaces', description: 'Visit hilltop Amber Fort, picturesque Jal Mahal on Man Sagar Lake, ornate Hawa Mahal, and City Palace museum.' },
+      { day: 3, title: 'Jaipur to Jodhpur - The Blue City', description: 'Drive to Jodhpur, check-in, explore the towering Mehrangarh Fort rising 400 ft above the blue city, Jaswant Thada, and Clock Tower market.' },
+      { day: 4, title: 'Jodhpur to Jaisalmer - The Golden City', description: 'Drive across the desert gateway to Jaisalmer, evening serene visit to Gadisar Lake with illuminated cenotaphs.' },
+      { day: 5, title: 'Jaisalmer Fort & Sam Sand Dunes Glamping', description: 'Explore UNESCO Sonar Qila and Patwon Ki Haveli. Afternoon transfer to Sam Sand Dunes for camel ride, Jeep dune bashing, and starry campfire folk dance in Swiss tents.' },
+      { day: 6, title: 'Jaisalmer to Udaipur - City of Lakes', description: 'Morning drive to romantic Udaipur through changing desert and mountain landscapes, check-in to lake-view hotel.' },
+      { day: 7, title: 'Udaipur City Palace & Lake Pichola Cruise', description: 'Tour Udaipur City Palace, Saheliyon Ki Bari, and enjoy a magnificent sunset boat cruise on Lake Pichola.' },
+      { day: 8, title: 'Udaipur Departure', description: 'Morning breakfast with lake view, last-minute souvenir shopping, and drop to Udaipur Airport / Railway Station.' }
+    ]
+  },
+
+  // 21. Kashmir Paradise on Earth (4N/5D, Price 18500)
+  {
+    id: 'hol-kashmir',
+    title: 'Kashmir Paradise on Earth - Srinagar, Gulmarg & Pahalgam',
+    destination: 'Dal Lake Houseboat (1N) • Srinagar Mughal Gardens • Gulmarg Gondola • Pahalgam Betaab Valley (2N)',
+    location: 'Srinagar, Gulmarg & Pahalgam, Kashmir Valley, India',
+    region: 'Kashmir • The Crown of India',
+    reasonToVisit: 'Stay in a traditional carved cedarwood houseboat on Dal Lake, ride the world-famous Gulmarg Gondola to snow peaks, glide on Shikara rides, and walk the lush saffron fields of Pahalgam.',
+    duration: '4 Nights / 5 Days',
+    nights: 4,
+    days: 5,
+    rating: 4.96,
+    reviewsCount: 1740,
+    price: 18500,
+    originalPrice: 24500,
+    image: './destinations/kashmir.jpg',
+    theme: 'Paradise on Earth',
+    category: 'kashmir',
+    isInternational: false,
+    badge: 'Kashmir Special 4N/5D ₹18,500',
+    tags: ['Dal Lake Houseboat Stay', 'Gulmarg Cable Car Gondola', 'Pahalgam Betaab Valley', 'Shikara Sunset Ride', 'Mughal Gardens'],
+    highlights: [
+      '4 Nights / 5 Days royal Kashmir valley tour at special flat ₹18,500',
+      'Overnight luxury stay in a traditional cedarwood houseboat on Dal Lake with private Shikara ride',
+      'Gulmarg Gondola ropeway ride up to Apharwat peak (Phase 1 & Phase 2 snow zone)',
+      'Scenic excursion to Pahalgam: Betaab Valley, Aru Valley & saffron fields of Pampore'
+    ],
+    inclusions: [
+      '1 Night Deluxe Dal Lake Houseboat + 3 Nights 4-star Hotel (Srinagar & Pahalgam)',
+      'Daily Kashmiri Wazwan & Multi-cuisine Breakfasts and Gourmet Dinners',
+      'Dedicated private heating-equipped vehicle for all airport transfers and valley sightseeing',
+      '1-Hour private Shikara ride on Dal Lake with evening floating market tour',
+      'Union cab assistance for Betaab & Aru valleys in Pahalgam'
+    ],
+    itinerary: [
+      { day: 1, title: 'Arrival at Srinagar & Dal Lake Shikara Sunset', description: 'Meet and greet at Srinagar airport with warm Kashmiri Kahwa tea. Check into traditional cedarwood Dal Lake Houseboat. Enjoy a peaceful 1-hour Shikara ride passing floating gardens and lotus waters.' },
+      { day: 2, title: 'Srinagar to Gulmarg - Meadow of Flowers', description: 'Scenic drive to Gulmarg through apple orchards. Board the world\'s highest operating cable car (Gulmarg Gondola) to snow-covered Apharwat Peak. Enjoy snow activities and visit ancient Maharani Temple before returning to Srinagar.' },
+      { day: 3, title: 'Srinagar to Pahalgam - Valley of Shepherds', description: 'Drive to Pahalgam visiting Pampore saffron fields and historic Awantipora ruins enroute. Check into riverside hotel along gushing Lidder River. Afternoon explore Betaab Valley and Chandanwari.' },
+      { day: 4, title: 'Pahalgam Local & Return to Srinagar', description: 'Morning horse ride or walk to scenic Aru Valley and Baisaran (Mini Switzerland of Kashmir). Drive back to Srinagar, explore Nishat Bagh, Shalimar Bagh, and Shankaracharya Temple.' },
+      { day: 5, title: 'Srinagar Departure', description: 'Morning visit to floating flower market and Lal Chowk for authentic Pashmina shawls, saffron, and dry fruits. Drop to Srinagar International Airport.' }
+    ]
+  },
+
+  // 22. Kashmir Grand Jannat Odyssey (5N/6D, Price 24000)
+  {
+    id: 'hol-kashmir-grand',
+    title: 'Kashmir Grand Jannat Odyssey - Srinagar, Gulmarg, Pahalgam & Sonamarg Glacier',
+    destination: 'Srinagar Houseboat (1N) • Sonamarg Thajiwas Glacier • Gulmarg Gondola (1N) • Pahalgam Valley (2N) • Srinagar (1N)',
+    location: 'Srinagar, Sonamarg, Gulmarg & Pahalgam, Kashmir Valley, India',
+    region: 'Kashmir • Greater Himalayas',
+    reasonToVisit: 'The complete Kashmir Jannat experience including the golden meadows of Sonamarg, year-round Thajiwas Glacier sledging, Gulmarg snow slopes, and romantic Lidder river chalets.',
+    duration: '5 Nights / 6 Days',
+    nights: 5,
+    days: 6,
+    rating: 4.98,
+    reviewsCount: 1250,
+    price: 24000,
+    originalPrice: 31500,
+    image: './destinations/gulmarg.jpg',
+    theme: 'Grand Himalayan Jannat',
+    category: 'kashmir',
+    isInternational: false,
+    badge: 'Grand Jannat 5N/6D ₹24,000',
+    tags: ['Sonamarg Thajiwas Glacier', 'Gulmarg Alpine Stay', 'Dal Lake Houseboat', 'Pahalgam Lidder River', 'Sindh River Rapids'],
+    highlights: [
+      '5 Nights / 6 Days complete Grand Kashmir circuit covering all 4 marquee jewels at ₹24,000',
+      'Excursion to Sonamarg "Meadow of Gold" with pony ride to Thajiwas Glacier ice caves',
+      'Gondola ride to 13,780 ft on Apharwat Peak with ski lessons and snow bike rides',
+      'Stay 1 Night in Gulmarg, 2 Nights in Pahalgam, and 1 Night floating on Dal Lake'
+    ],
+    inclusions: [
+      '5 Nights luxury accommodation (Houseboat, Gulmarg resort, Pahalgam river lodge & Srinagar)',
+      'Daily Buffet Breakfast and Chef’s Dinners with authentic Kashmiri wazwan specialties',
+      'All sightseeing and inter-valley transfers in sanitized private heating Innova/Tempo',
+      'Dal Lake 2-hour Shikara cruise + Sonamarg and Gulmarg toll taxes and inner-valley permits'
+    ],
+    itinerary: [
+      { day: 1, title: 'Arrival in Srinagar & Dal Lake Shikara Cruise', description: 'Warm welcome at Srinagar Airport, transfer to deluxe Dal Lake houseboat. Evening Shikara ride to Char Chinar and floating handicraft bazaars.' },
+      { day: 2, title: 'Full Day Excursion to Sonamarg - Meadow of Gold', description: 'Drive along the roaring Sindh River through picturesque alpine gorges to Sonamarg (8,950 ft). Pony ride to the magnificent Thajiwas Glacier snowfields, drive back to Srinagar.' },
+      { day: 3, title: 'Srinagar to Gulmarg Alpine Wonderland', description: 'Drive to Gulmarg, ride Phase 1 and Phase 2 of the Gondola ropeway touching snow clouds at 14,000 ft. Overnight stay in snow resort in Gulmarg.' },
+      { day: 4, title: 'Gulmarg to Pahalgam - Valley of Shepherds', description: 'Morning scenic transfer to picturesque Pahalgam via apple orchards. Check-in by the Lidder River, evening leisurely stroll through pine-scented town.' },
+      { day: 5, title: 'Pahalgam Exploration (Betaab, Aru, Chandanwari) & Srinagar', description: 'Full day exploring Betaab Valley, Aru meadow, and Chandanwari (base of Amarnath Yatra). Drive back to Srinagar for farewell dinner.' },
+      { day: 6, title: 'Mughal Gardens & Departure', description: 'Visit Chashme Shahi, Pari Mahal, and Tulip Garden (seasonal) before heading to Srinagar airport for departure flight.' }
+    ]
+  },
+
+  // 23. Chakrata Offbeat Pine Retreat & Tiger Falls (2N/3D, Price 6500)
+  {
+    id: 'hol-chakrata',
+    title: 'Chakrata Offbeat Pine Retreat & Tiger Falls Trek',
+    destination: 'Tiger Falls • Chilmiri Sunset Peak • Budher Caves • Deoban Deodar Woods • Kanasar',
+    location: 'Chakrata, Dehradun District, Uttarakhand, India',
+    region: 'Uttarakhand • Jaunsar Bawar Highlands',
+    reasonToVisit: 'Uncrowded British-era hill cantonment nestled amidst towering ancient deodars, India’s highest direct-fall waterfall Tiger Falls (312 ft), and 360-degree snow panorama from Chilmiri Neck.',
+    duration: '2 Nights / 3 Days',
+    nights: 2,
+    days: 3,
+    rating: 4.88,
+    reviewsCount: 540,
+    price: 6500,
+    originalPrice: 8500,
+    image: './destinations/chakrata.jpg',
+    theme: 'Offbeat Pine Retreat',
+    category: 'uttarakhand',
+    isInternational: false,
+    badge: 'Hidden Gem 2N/3D ₹6,500',
+    tags: ['Tiger Falls 312ft', 'Chilmiri Sunset Neck', 'Ancient Deodar Forests', 'Budher Caves & Moila Top', 'Campfire & Starry Skies'],
+    highlights: [
+      '2 Nights / 3 Days pristine hill sanctuary away from tourist crowds at flat ₹6,500',
+      'Hike down through fragrant pine forests to roar of Tiger Falls cascading 312 ft into a natural pool',
+      'Spectacular sunset over the snow-clad Bandarpoonch and Swargarohini peaks from Chilmiri Neck',
+      'Trek through Moila Top green bugyal and explore limestone Budher (Miola) caves'
+    ],
+    inclusions: [
+      '2 Nights stay in eco pine wood cottages / luxury alpine swiss tents',
+      'All Home-cooked Pahari Breakfasts and Gourmet Dinners included',
+      'Round-trip transport from Dehradun Railway Station in dedicated hill cab',
+      'Local nature guide for Tiger Falls trek and Budher caves exploration',
+      'Evening acoustic campfire with hot snacks under clear Milky Way sky'
+    ],
+    itinerary: [
+      { day: 1, title: 'Dehradun to Chakrata & Chilmiri Sunset', description: 'Scenic drive from Dehradun/Rishikesh climbing through Kalsi and Yamuna gorge to Chakrata (7,000 ft). Check into pine cottage. Evening walk to Chilmiri Neck for panoramic sunset over the Great Himalayan Range.' },
+      { day: 2, title: 'Tiger Falls Hike & Kanasar Ancient Deodars', description: 'Guided 5km scenic pine trek to legendary Tiger Falls (312 ft), dip your feet in icy natural rock pool. Afternoon drive to Kanasar, home to Asia’s oldest and widest giant deodar trees.' },
+      { day: 3, title: 'Budher Caves & Return to Dehradun', description: 'Morning hike to scenic Moila bugyal top and historic stalactite limestone Budher caves. Savor hot Pahari lunch and scenic descent back to Dehradun.' }
+    ]
+  },
+
+  // 24. Chakrata & Mussoorie Queen of Hills Escapade (3N/4D, Price 9800)
+  {
+    id: 'hol-chakrata-mussoorie',
+    title: 'Chakrata & Mussoorie Queen of Hills Highland Escapade',
+    destination: 'Chakrata Pine Woods (2N) • Tiger Falls • Kempty Falls • Mussoorie Mall Road (1N) • Gun Hill • George Everest',
+    location: 'Chakrata & Mussoorie, Garhwal, Uttarakhand, India',
+    region: 'Uttarakhand • Garhwal Highlands',
+    reasonToVisit: 'The perfect combination of untouched offbeat serenity in Chakrata with colonial charm, bakeries, Kempty falls, and dazzling Doon Valley night views in Mussoorie.',
+    duration: '3 Nights / 4 Days',
+    nights: 3,
+    days: 4,
+    rating: 4.92,
+    reviewsCount: 880,
+    price: 9800,
+    originalPrice: 13200,
+    image: './destinations/mussoorie.jpg',
+    theme: 'Garhwal Hill Double Delight',
+    category: 'uttarakhand',
+    isInternational: false,
+    badge: 'Popular Combo 3N/4D ₹9,800',
+    tags: ['2N Chakrata + 1N Mussoorie', 'Tiger Falls & Kempty Falls', 'George Everest Peak', 'Mussoorie Mall Road', 'Doon Valley Night Lights'],
+    highlights: [
+      '3 Nights / 4 Days comprehensive Garhwal highlands combo at flat ₹9,800',
+      '2 Nights in secluded pine forests of Chakrata + 1 Night in bustling colonial Mussoorie',
+      'Visit both iconic waterfalls: roaring Tiger Falls and cascading Kempty Falls',
+      'Hike up to Sir George Everest house for sunset views over Doon valley and Aglar river'
+    ],
+    inclusions: [
+      '2 Nights in Chakrata Pine Cottage + 1 Night in Mussoorie 3-Star Mall Road Hotel',
+      'Daily Delicious Breakfasts and Buffet Dinners',
+      'Dedicated AC Sedan / Ertiga for all transfers from Dehradun through the entire itinerary',
+      'All sightseeing permits and parking charges'
+    ],
+    itinerary: [
+      { day: 1, title: 'Dehradun to Chakrata & Chilmiri Peak Sunset', description: 'Arrive at Dehradun, drive through scenic Jaunsar hills to Chakrata. Check in, evening leisure walk to Chilmiri sunset viewpoint and bonfire dinner.' },
+      { day: 2, title: 'Tiger Falls Trek & Kanasar Pine Forest', description: 'Explore majestic Tiger Falls with refreshing stream hike. Visit Kanasar meadow with centuries-old deodars and return for stargazing.' },
+      { day: 3, title: 'Chakrata to Mussoorie via Yamuna Bridge & Kempty Falls', description: 'Scenic drive to Mussoorie via historic Yamuna bridge. Dip and photo stop at Kempty Falls. Check into Mussoorie hotel. Evening stroll along Mall Road, Landour bakehouse, and Gun Hill ropeway.' },
+      { day: 4, title: 'George Everest House, Company Garden & Dehradun Drop', description: 'Morning hike to Sir George Everest estate with panoramic view of snow peaks. Visit Company Garden and descend to Dehradun railway station/airport.' }
     ]
   }
 ];
@@ -1150,43 +1677,112 @@ export const MOCK_TRAINS: Train[] = [
 
 export const MOCK_CABS: Cab[] = [
   {
-    id: 'cab-1',
-    model: 'Toyota Innova Crysta',
+    id: 'cab-innova',
+    model: 'Toyota Innova Crysta 2.4 VX',
     category: 'SUV',
     capacity: 6,
     luggage: 4,
     pricePerKm: 18,
     baseFare: 3200,
     estimatedTotal: 4800,
-    features: ['Plush Leather Captain Seats', 'Dual AC with Rear Vents', 'Experienced Yatra Chauffeur', 'Carrier for Pooja Samagri'],
-    image: 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=600&q=80',
-    rating: 4.9
+    features: [
+      'Plush Leather Captain Seats & Armrests',
+      'Dual Chilled AC with Independent Rear Vents',
+      'Dedicated Roof Carrier for Yatra Luggage & Pooja Samagri',
+      'Verified Mountain & Ghat-Certified Sevadar Driver'
+    ],
+    image: innovaImg,
+    rating: 4.95
   },
   {
-    id: 'cab-2',
-    model: 'Maruti Suzuki Dzire',
+    id: 'cab-ertiga',
+    model: 'Maruti Suzuki Ertiga Smart Hybrid',
+    category: 'MUV',
+    capacity: 6,
+    luggage: 3,
+    pricePerKm: 14,
+    baseFare: 2400,
+    estimatedTotal: 3600,
+    features: [
+      'Budget-Friendly 6-Seater Family Comfort',
+      'Roof Mounted AC Blower for All Rows',
+      'Smooth High-Ground Clearance Suspension',
+      'Punctual Doorstep Pickup & Fastag Tolls'
+    ],
+    image: ertigaImg,
+    rating: 4.88
+  },
+  {
+    id: 'cab-urbania',
+    model: 'Force Urbania Executive Luxury Van',
+    category: 'Luxury Van',
+    capacity: 13,
+    luggage: 10,
+    pricePerKm: 32,
+    baseFare: 7500,
+    estimatedTotal: 10800,
+    features: [
+      'VIP Reclining Pushback Seats with Calf Support',
+      'Wide Panoramic Tinted Sightseeing Windows',
+      'Individual USB Fast Chargers & LED Reading Lights',
+      'Standing Height High-Roof Cabin & Ambient Lighting'
+    ],
+    image: urbaniaImg,
+    rating: 4.98
+  },
+  {
+    id: 'cab-tempo',
+    model: 'Force Tempo Traveller (12 / 17 Seater)',
+    category: 'Tempo Traveller',
+    capacity: 17,
+    luggage: 14,
+    pricePerKm: 26,
+    baseFare: 5800,
+    estimatedTotal: 8600,
+    features: [
+      '2x1 Deluxe Pushback Recliner Seats',
+      'Heavy-Duty Roof Luggage Carrier & Rear Step Ladder',
+      'Stereo Sound System with Mic for Bhajans & Aarti',
+      'Expert Driver for Char Dham & Himachal Yatra Routes'
+    ],
+    image: tempoImg,
+    rating: 4.92
+  },
+  {
+    id: 'cab-volvo',
+    model: 'Volvo 9600 Multi-Axle Luxury AC Coach',
+    category: 'Luxury Bus',
+    capacity: 45,
+    luggage: 35,
+    pricePerKm: 65,
+    baseFare: 16000,
+    estimatedTotal: 24500,
+    features: [
+      'Electronic Air Suspension for Zero-Vibration Glide',
+      'Ultra-Plush Semi-Sleeper Recliner Seats with Leg Rests',
+      'Dual LCD Screens, HD Sound & Guide PA System',
+      'Massive Under-Floor Luggage Hold & Sanitized Cabins'
+    ],
+    image: volvoImg,
+    rating: 4.97
+  },
+  {
+    id: 'cab-dzire',
+    model: 'Maruti Suzuki Dzire Tour (AC Sedan)',
     category: 'Sedan',
     capacity: 4,
     luggage: 2,
     pricePerKm: 12,
     baseFare: 2100,
-    estimatedTotal: 3100,
-    features: ['Clean Sanitized Interior', 'Quiet AC Cab', 'Fastag Enabled Tolls', 'Doorstep Pickup'],
-    image: 'https://images.unsplash.com/photo-1552519507-da3b142c6e3d?auto=format&fit=crop&w=600&q=80',
-    rating: 4.75
-  },
-  {
-    id: 'cab-3',
-    model: 'Force Urbania Luxury Tempo',
-    category: 'Tempo Traveller',
-    capacity: 12,
-    luggage: 10,
-    pricePerKm: 28,
-    baseFare: 6500,
-    estimatedTotal: 9800,
-    features: ['Recliner Pushback Seats', 'Individual AC Vents & USB Charger', 'Ideal for Family Pilgrimages', 'Hill-Certified Driver'],
-    image: 'https://images.unsplash.com/photo-1570125909232-eb263c188f7e?auto=format&fit=crop&w=600&q=80',
-    rating: 4.95
+    estimatedTotal: 2900,
+    features: [
+      'Spotless Sanitized AC Interiors',
+      'Direct Airport & Railway Station Transfers',
+      '100% On-Time Guarantee with Live Tracking',
+      'Zero Hidden Charges (Tolls & State Taxes Included)'
+    ],
+    image: dzireImg,
+    rating: 4.82
   }
 ];
 

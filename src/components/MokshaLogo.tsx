@@ -14,10 +14,10 @@ export const MokshaLogo: React.FC<MokshaLogoProps> = ({
   size = 'md'
 }) => {
   const sizeMap = {
-    sm: { img: 'h-8', textTitle: 'text-base', textSub: 'text-[9px]' },
-    md: { img: 'h-11', textTitle: 'text-xl', textSub: 'text-[10px]' },
-    lg: { img: 'h-14', textTitle: 'text-2xl', textSub: 'text-xs' },
-    xl: { img: 'h-20', textTitle: 'text-3xl', textSub: 'text-sm' }
+    sm: { img: 'h-7 sm:h-8', textTitle: 'text-sm sm:text-base', textSub: 'text-[8px] sm:text-[9px]' },
+    md: { img: 'h-9 sm:h-11', textTitle: 'text-lg sm:text-xl', textSub: 'text-[8px] sm:text-[10px]' },
+    lg: { img: 'h-11 sm:h-14', textTitle: 'text-xl sm:text-2xl', textSub: 'text-[9px] sm:text-xs' },
+    xl: { img: 'h-14 sm:h-20', textTitle: 'text-2xl sm:text-3xl', textSub: 'text-xs sm:text-sm' }
   };
 
   const currentSize = sizeMap[size];
@@ -74,16 +74,16 @@ export const MokshaLogo: React.FC<MokshaLogoProps> = ({
             </span>
           </div>
 
-          <div className="flex items-center gap-2 mt-1">
-            <div className={`h-[1.5px] w-4 ${theme === 'dark' ? 'bg-amber-400' : 'bg-[#0B2545]'}`} />
+          <div className="flex items-center gap-1.5 sm:gap-2 mt-0.5 sm:mt-1">
+            <div className={`h-[1.5px] w-3 sm:w-4 shrink-0 ${theme === 'dark' ? 'bg-amber-400' : 'bg-[#0B2545]'}`} />
             <span
-              className={`text-[9px] uppercase tracking-widest font-bold ${
+              className={`text-[7.5px] sm:text-[9px] uppercase tracking-wider sm:tracking-widest font-bold truncate max-w-[215px] sm:max-w-none ${
                 theme === 'dark' ? 'text-slate-300' : 'text-slate-600'
               }`}
             >
               Himalayan Treks • Sacred Yatras • Holidays
             </span>
-            <div className="h-[1.5px] w-4 bg-[#ff6a00]" />
+            <div className="h-[1.5px] w-3 sm:w-4 bg-[#ff6a00] shrink-0" />
           </div>
         </div>
       )}

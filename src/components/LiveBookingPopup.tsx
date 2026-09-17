@@ -157,7 +157,7 @@ export const LiveBookingPopup: React.FC<LiveBookingPopupProps> = ({ onSelectDest
       id="live-booking-toast-container"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
-      className={`fixed bottom-6 left-4 sm:left-6 z-40 max-w-[340px] sm:max-w-[370px] w-full transition-all duration-500 ease-out transform ${
+      className={`fixed bottom-4 left-3 right-3 sm:right-auto sm:left-6 z-40 max-w-[calc(100vw-1.5rem)] sm:max-w-[370px] w-auto sm:w-full transition-all duration-500 ease-out transform ${
         isVisible
           ? 'translate-y-0 opacity-100 scale-100 pointer-events-auto'
           : 'translate-y-8 opacity-0 scale-95 pointer-events-none'

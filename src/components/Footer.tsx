@@ -1,18 +1,21 @@
 import React from 'react';
-import { Compass, PhoneCall, Mail, ShieldCheck, Heart, Flame } from 'lucide-react';
+import { Compass, PhoneCall, Mail, ShieldCheck, Heart, Flame, Instagram, Facebook } from 'lucide-react';
 import { MokshaLogo } from './MokshaLogo';
 
 export const Footer: React.FC = () => {
+  const instagramUrl = 'https://www.instagram.com/moksha_getaways?stkn=MXc2NnVoMjY5a2VsYg==';
+  const facebookUrl = 'https://www.facebook.com/share/1Bp3mEHYUn/';
+
   return (
-    <footer className="bg-[#081524] text-slate-400 text-xs border-t border-slate-800">
+    <footer className="bg-[#081524] text-slate-400 text-xs border-t border-slate-800 w-full min-w-0 max-w-full overflow-hidden">
       {/* Top Links Directory */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-10 border-b border-slate-800">
-          {/* Col 1: Brand */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-8 sm:py-12 w-full min-w-0 max-w-full overflow-hidden">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 pb-8 sm:pb-10 border-b border-slate-800">
+          {/* Col 1: Brand & Contact */}
           <div className="lg:col-span-2 space-y-3">
             <MokshaLogo variant="full" theme="dark" size="md" />
             <p className="text-slate-400 text-xs leading-relaxed max-w-sm">
-              India's premier travel & spiritual booking portal. Making holidays, Himalayan treks, and pilgrimages effortless with verified temple passes, certified satvik cuisine, helicopter reservations, luxury stays, and 24x7 support.
+              India's premier travel & spiritual booking portal. Curating Himalayan treks, Kashmir paradise tours, Royal Rajasthan expeditions, and sacred pilgrimages with verified temple darshan passes and 24x7 assistance.
             </p>
             <div className="pt-2 text-slate-300 space-y-2">
               <a 
@@ -34,6 +37,36 @@ export const Footer: React.FC = () => {
               <div className="flex items-start gap-2 text-xs text-slate-300">
                 <span className="text-amber-400">📍</span>
                 <span>Office: <strong>Sector 49 Noida, near Hanuman Mandir</strong>, Uttar Pradesh</span>
+              </div>
+            </div>
+
+            {/* Official Social Media Follow Bar */}
+            <div className="pt-3">
+              <span className="text-[11px] font-bold text-slate-300 uppercase tracking-wider block mb-2">
+                Follow Moksha Gateways
+              </span>
+              <div className="flex flex-wrap items-center gap-2.5">
+                <a
+                  href={instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-gradient-to-r from-[#833ab4] via-[#fd1d1d] to-[#fcb045] hover:opacity-95 text-white font-bold text-xs shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                  title="Follow us on Instagram @moksha_getaways"
+                >
+                  <Instagram className="w-4 h-4" />
+                  <span>@moksha_getaways</span>
+                </a>
+
+                <a
+                  href={facebookUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-[#1877F2] hover:bg-[#166fe5] text-white font-bold text-xs shadow-md transition-all transform hover:-translate-y-0.5 active:translate-y-0"
+                  title="Follow us on Facebook"
+                >
+                  <Facebook className="w-4 h-4" />
+                  <span>Facebook</span>
+                </a>
               </div>
             </div>
           </div>
@@ -93,11 +126,11 @@ export const Footer: React.FC = () => {
         </div>
 
         {/* Bottom copyright row */}
-        <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[11px] text-slate-500">
+        <div className="pt-6 sm:pt-8 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 text-[11px] text-slate-500 text-center sm:text-left">
           <div>
             © 2026 Moksha Gateways India Pvt. Ltd. All rights reserved.
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-4">
             <a href="#" className="hover:text-slate-300">Privacy Policy</a>
             <span>•</span>
             <a href="#" className="hover:text-slate-300">Terms of Pilgrimage</a>

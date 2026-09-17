@@ -318,6 +318,90 @@ const STATIC_CURATED_PLANS: StaticItinerary[] = [
       'Passport valid for at least 6 months required.',
       'Visa on Arrival (VoA) & tourist levy assisted by Moksha team.'
     ]
+  },
+  {
+    id: 'plan-rajasthan',
+    title: 'Royal Rajasthan Heritage & Desert Oasis',
+    destination: 'Udaipur, Mount Abu & Jaisalmer Thar Desert',
+    duration: '6 Days / 5 Nights',
+    style: 'Royal Palaces, Dilwara Temples & Desert Safari',
+    bestSeason: 'October to March (Pleasant Autumn & Winter)',
+    estimatedCost: '₹18,500 - ₹24,000 / person',
+    badge: 'Trending Royal Heritage',
+    summary: 'Romantic boat cruises on Lake Pichola in Udaipur, serene white marble wonders of Dilwara Temples & Nakki Lake in Mount Abu, and luxury Swiss tent glamping with camel safari in Jaisalmer.',
+    days: [
+      {
+        day: 1,
+        title: 'Arrival in Udaipur - The Venice of the East',
+        activities: [
+          'VIP pickup from Udaipur airport/railway station and check-in to lake-view heritage haveli',
+          'Private sunset motorboat cruise on Lake Pichola with view of illuminated Lake Palace & Jag Mandir',
+          'Evening stroll through the bustling old city bazaars for miniature paintings and leather diaries'
+        ],
+        highlight: 'Sunset Lake Pichola Cruise',
+        staySuggestion: 'Udaipur Heritage Palace Haveli'
+      },
+      {
+        day: 2,
+        title: 'Udaipur City Palace & Cultural Evening',
+        activities: [
+          'VIP guided tour of majestic Udaipur City Palace complex overlooking the serene lake',
+          'Darshan at historic 1651 AD Jagdish Temple with stone elephant carvings',
+          'Stroll through royal fountains of Saheliyon Ki Bari and evening folk dance at Bagore Ki Haveli'
+        ],
+        highlight: 'City Palace Grandeur & Folk Dance',
+        staySuggestion: 'Udaipur Heritage Palace Haveli'
+      },
+      {
+        day: 3,
+        title: 'Scenic Aravalli Drive to Mount Abu & Dilwara Temples',
+        activities: [
+          'Picturesque mountain drive through the Aravalli hills to Rajasthan\'s only hill station',
+          'Visit world-famous Dilwara Jain Temples marveling at delicate, lace-like pure marble ceilings',
+          'Sunset pedal boating on mythological Nakki Lake and hike to iconic Toad Rock'
+        ],
+        highlight: 'Dilwara Marble Architecture & Nakki Lake',
+        staySuggestion: 'Mount Abu Colonial Pine Resort'
+      },
+      {
+        day: 4,
+        title: 'Guru Shikhar Summit & Journey to Jaisalmer',
+        activities: [
+          'Ascend to Guru Shikhar (1,722m) - highest peak in the entire Aravalli range',
+          'Comfortable highway drive towards the Golden City of Jaisalmer',
+          'Check-in to golden yellow sandstone haveli and evening view of glowing Sonar Qila'
+        ],
+        highlight: 'Guru Shikhar Panoramic Mountain Vistas',
+        staySuggestion: 'Jaisalmer Golden Haveli Hotel'
+      },
+      {
+        day: 5,
+        title: 'Living Golden Fort & Sam Sand Dunes Desert Glamping',
+        activities: [
+          'Walking tour inside UNESCO Sonar Qila (Jaisalmer Fort) and ancient Jain havelis',
+          'Transfer to Sam Sand Dunes; royal tikka welcome with traditional Nagada drums',
+          'Thrilling 4x4 Jeep dune bashing and sunset camel ride across rolling golden dunes',
+          'Evening musical Kalbeliya folk dance around bonfire with gala Rajasthani dinner'
+        ],
+        highlight: 'Thar Desert Sunset Camel Safari & Glamping',
+        staySuggestion: 'Sam Sand Dunes Luxury Swiss Tents'
+      },
+      {
+        day: 6,
+        title: 'Desert Sunrise & Farewell Rajasthan',
+        activities: [
+          'Early morning sunrise photography over golden ripples with hot masala chai',
+          'Visit ancient Gadisar Lake cenotaphs before transfer to Jaisalmer Airport / Railway Station'
+        ],
+        highlight: 'Golden Desert Sunrise',
+        staySuggestion: 'Safe Journey Home'
+      }
+    ],
+    packingTips: [
+      'Light cottons for daytime and warm shawls/jackets for cold desert nights.',
+      'Slip-on shoes for temple visits at Dilwara and comfortable walking shoes for forts.',
+      'Camera with extra battery backup for mesmerizing palace sunsets and starry night skies.'
+    ]
   }
 ];
 
@@ -695,7 +779,7 @@ export const AiPlannerModal: React.FC<AiPlannerModalProps> = ({
                         type="text"
                         value={destination}
                         onChange={(e) => setDestination(e.target.value)}
-                        placeholder="e.g. Spiti Valley, Kedarnath & Badrinath, Bali"
+                        placeholder="e.g. Udaipur & Mount Abu, Jaisalmer Desert, Spiti Valley, Bali"
                         className="w-full p-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-orange-500"
                         required
                       />
@@ -742,6 +826,7 @@ export const AiPlannerModal: React.FC<AiPlannerModalProps> = ({
                         onChange={(e) => setTripType(e.target.value)}
                         className="w-full p-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-orange-500"
                       >
+                        <option value="Royal Heritage & Desert Safari">Royal Rajasthan Heritage & Desert Safari</option>
                         <option value="Himalayan Pilgrimage & Trekking">Himalayan Pilgrimage & Trekking</option>
                         <option value="Spiritual & Heritage Darshan">Spiritual & Heritage Darshan</option>
                         <option value="Off-road 4x4 & Adventure">Off-road 4x4 & Adventure</option>

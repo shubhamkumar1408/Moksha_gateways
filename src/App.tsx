@@ -12,6 +12,7 @@ import { BookingModal } from './components/BookingModal';
 import { MyBookingsModal } from './components/MyBookingsModal';
 import { AiPlannerModal } from './components/AiPlannerModal';
 import { LoginModal } from './components/LoginModal';
+import { QuickQrPaymentModal } from './components/QuickQrPaymentModal';
 import { Footer } from './components/Footer';
 import { WhatsAppContactBar } from './components/WhatsAppContactBar';
 import { LiveBookingPopup } from './components/LiveBookingPopup';
@@ -30,6 +31,8 @@ export default function App() {
   const [isBookingsModalOpen, setIsBookingsModalOpen] = useState(false);
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const [isQuickQrOpen, setIsQuickQrOpen] = useState(false);
+  const [quickQrTarget, setQuickQrTarget] = useState<{ title?: string; price?: number } | undefined>(undefined);
 
   // Active item to book
   const [itemToBook, setItemToBook] = useState<any>(null);
@@ -155,8 +158,16 @@ export default function App() {
     setIsCheckoutOpen(true);
   };
 
+  const handleQuickQrBookingConfirmed = (confirmedBooking: Booking) => {
+    setBookings((prev) => {
+      const updated = [confirmedBooking, ...prev];
+      localStorage.setItem('moksha_saved_bookings', JSON.stringify(updated));
+      return updated;
+    });
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-[#f2f5f9] text-slate-900 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen flex flex-col bg-[#f2f5f9] text-slate-900 font-['Plus_Jakarta_Sans',sans-serif] w-full max-w-full overflow-x-hidden relative">
       {/* Header */}
       <Header
         activeService={activeService}
@@ -209,7 +220,13 @@ export default function App() {
         )}
 
         {activeService === 'holidays' && (
-          <HolidaysSection onBookHoliday={startHolidayBooking} />
+          <HolidaysSection 
+            onBookHoliday={startHolidayBooking} 
+            onQuickQrPay={(pkg) => {
+              setQuickQrTarget({ title: pkg.title, price: pkg.price });
+              setIsQuickQrOpen(true);
+            }}
+          />
         )}
 
         {activeService === 'trains' && (
@@ -255,6 +272,14 @@ export default function App() {
         bookingItem={itemToBook}
         serviceType={checkoutServiceType}
         onBookingSuccess={handleBookingSuccess}
+      />
+
+      <QuickQrPaymentModal
+        isOpen={isQuickQrOpen}
+        onClose={() => setIsQuickQrOpen(false)}
+        defaultPackageTitle={quickQrTarget?.title}
+        defaultAmount={quickQrTarget?.price}
+        onBookingConfirmed={handleQuickQrBookingConfirmed}
       />
 
       <MyBookingsModal

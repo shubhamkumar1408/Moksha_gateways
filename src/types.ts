@@ -112,7 +112,9 @@ export interface HolidayPackage {
   image: string;
   theme: string;
   tags: string[];
-  category?: 'all' | 'himachal' | 'uttarakhand' | 'ladakh' | 'sacred' | 'international';
+  category?: 'all' | 'himachal' | 'uttarakhand' | 'ladakh' | 'kashmir' | 'sacred' | 'international' | 'rajasthan';
+  region?: string;
+  reasonToVisit?: string;
   highlights?: string[];
   inclusions?: string[];
   itinerary?: { day: number; title: string; description: string; stay?: string; meals?: string }[];
@@ -145,7 +147,7 @@ export interface Train {
 export interface Cab {
   id: string;
   model: string;
-  category: 'Sedan' | 'SUV' | 'Luxury' | 'Tempo Traveller';
+  category: 'Sedan' | 'SUV' | 'MUV' | 'Tempo Traveller' | 'Luxury Van' | 'Luxury Bus';
   capacity: number;
   luggage: number;
   pricePerKm: number;

@@ -36,11 +36,11 @@ export const WhyMoksha: React.FC = () => {
   ];
 
   return (
-    <section className="bg-slate-900 text-white py-16 px-4 sm:px-6 lg:px-8 relative overflow-hidden my-8">
+    <section className="bg-slate-900 text-white py-12 sm:py-16 px-3 sm:px-6 lg:px-8 relative overflow-hidden my-6 sm:my-8 w-full min-w-0 max-w-full">
       {/* Glow */}
       <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
-      <div className="max-w-7xl mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10 w-full min-w-0">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <span className="text-amber-400 font-extrabold text-xs uppercase tracking-widest">
             The Moksha Promise
