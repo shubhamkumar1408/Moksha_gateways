@@ -28,7 +28,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   const handleVerify = (e: React.FormEvent) => {
     e.preventDefault();
-    const finalName = name.trim() || 'Shubham Dutt';
+    const finalName = name.trim() || 'Rahul';
     onLoginSuccess(finalName);
     onClose();
   };
@@ -69,7 +69,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   type="text"
                   value={name}
                   onChange={(e) => setName(e.target.value)}
-                  placeholder="e.g. Shubham Dutt"
+                  placeholder="e.g. Rahul"
                   className="w-full p-2.5 rounded-xl border border-slate-300 text-sm font-semibold focus:outline-amber-500"
                 />
               </div>

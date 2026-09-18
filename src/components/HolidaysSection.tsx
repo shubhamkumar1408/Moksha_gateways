@@ -17,7 +17,9 @@ import {
   Calendar,
   MessageCircle,
   QrCode,
-  Share2
+  Share2,
+  Tag,
+  Copy
 } from 'lucide-react';
 import { HolidayPackage } from '../types';
 import { MOCK_HOLIDAYS } from '../data/mockData';
@@ -36,6 +38,14 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activePackageModal, setActivePackageModal] = useState<HolidayPackage | null>(null);
+  const [selectedDurationByPkg, setSelectedDurationByPkg] = useState<Record<string, number>>({});
+  const [isCouponCopied, setIsCouponCopied] = useState<boolean>(false);
+
+  const handleCopyFirst501 = () => {
+    navigator.clipboard.writeText('FIRST501');
+    setIsCouponCopied(true);
+    setTimeout(() => setIsCouponCopied(false), 2500);
+  };
 
   const handleOpenDestination = (pkg: HolidayPackage) => {
     if (onSelectDestination) {
@@ -180,6 +190,42 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
         </div>
       </div>
 
+      {/* First Booking Coupon Promotional Banner */}
+      <div className="mb-6 bg-gradient-to-r from-orange-600 via-amber-600 to-orange-500 rounded-2xl p-3.5 sm:p-4 text-white shadow-lg flex flex-col sm:flex-row items-center justify-between gap-3">
+        <div className="flex items-center gap-3 text-center sm:text-left">
+          <div className="w-10 h-10 rounded-xl bg-white/20 backdrop-blur-xs flex items-center justify-center shrink-0 shadow-inner">
+            <Sparkles className="w-5 h-5 text-amber-200" />
+          </div>
+          <div>
+            <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+              <span className="text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-white text-orange-700">
+                First Booking Special Offer
+              </span>
+              <span className="text-xs font-black text-amber-100">
+                Flat ₹501 OFF with Coupon Code
+              </span>
+            </div>
+            <p className="text-xs sm:text-sm font-extrabold text-white mt-0.5">
+              Manali: 2N/3D @ ₹5,999 (effective ₹5,498) & 3N/4D @ ₹6,999 (effective ₹6,498)!
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 shrink-0">
+          <div className="bg-black/30 backdrop-blur-xs px-3 py-1.5 rounded-xl border border-white/30 font-mono font-black text-sm tracking-wider text-amber-300">
+            FIRST501
+          </div>
+          <button
+            type="button"
+            onClick={handleCopyFirst501}
+            className="px-3 py-1.5 bg-white hover:bg-orange-50 text-orange-700 font-black text-xs rounded-xl shadow-xs transition-all cursor-pointer flex items-center gap-1"
+          >
+            {isCouponCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
+            <span>{isCouponCopied ? 'Copied ₹501 OFF' : 'Copy Code'}</span>
+          </button>
+        </div>
+      </div>
+
       {/* Package Grid */}
       {filteredPackages.length === 0 ? (
         <div className="bg-white rounded-2xl p-8 sm:p-12 text-center border border-slate-200 shadow-xs">
@@ -195,180 +241,253 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 w-full min-w-0">
-          {filteredPackages.map((pkg) => (
-            <div
-              key={pkg.id}
-              id={`holiday-card-${pkg.id}`}
-              className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-teal-500 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group w-full min-w-0"
-            >
-              <div>
-                {/* Image & Badges - Clickable to open full destination page */}
-                <div 
-                  onClick={() => handleOpenDestination(pkg)}
-                  className="h-52 relative overflow-hidden cursor-pointer"
-                  title={`View full details & itinerary for ${pkg.title}`}
-                >
-                  <img
-                    src={pkg.image}
-                    alt={pkg.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30" />
+          {filteredPackages.map((pkg) => {
+            const hasOptions = Boolean(pkg.durationOptions && pkg.durationOptions.length > 1);
+            const activeDurationIdx = selectedDurationByPkg[pkg.id] ?? (pkg.durationOptions ? (pkg.durationOptions.findIndex(o => o.nights === 3) >= 0 ? pkg.durationOptions.findIndex(o => o.nights === 3) : 0) : 0);
+            const activeOption = pkg.durationOptions ? pkg.durationOptions[activeDurationIdx] : null;
+            const currentPrice = activeOption ? activeOption.price : pkg.price;
+            const currentOriginalPrice = activeOption ? activeOption.originalPrice : pkg.originalPrice;
+            const currentDuration = activeOption ? activeOption.duration : pkg.duration;
 
-                  {/* Top Badges */}
-                  <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
-                    <span className="bg-slate-900/85 backdrop-blur-xs text-white text-[11px] font-bold px-2.5 py-1 rounded-full border border-white/10 shadow-xs flex items-center gap-1">
-                      {pkg.isInternational ? <Globe className="w-3 h-3 text-cyan-400" /> : <Compass className="w-3 h-3 text-amber-400" />}
-                      <span>{pkg.theme}</span>
-                    </span>
+            const packageForAction: HolidayPackage = {
+              ...pkg,
+              price: currentPrice,
+              originalPrice: currentOriginalPrice,
+              duration: currentDuration,
+              nights: activeOption ? activeOption.nights : pkg.nights,
+              days: activeOption ? activeOption.days : pkg.days
+            };
 
-                    {pkg.badge && (
-                      <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-full shadow-md">
-                        {pkg.badge}
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Bottom Duration & Rating over image */}
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs pointer-events-none">
-                    <div className="bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5 border border-white/15">
-                      <Clock className="w-3.5 h-3.5 text-teal-400" />
-                      <span>{pkg.duration}</span>
-                    </div>
-
-                    <div className="bg-white/95 px-2 py-0.5 rounded-lg text-[11px] font-black text-slate-900 flex items-center gap-1 shadow-xs">
-                      ⭐ {pkg.rating} <span className="text-slate-500 font-normal">({pkg.reviewsCount})</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Package Details */}
-                <div className="p-5 pb-3">
-                  {/* Location & Region Badges */}
-                  <div className="flex flex-col gap-1.5 mb-2.5">
-                    {pkg.location && (
-                      <div className="flex items-center gap-1.5 text-xs text-teal-900 font-bold bg-teal-50/90 px-2.5 py-1 rounded-lg border border-teal-200/60">
-                        <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
-                        <span className="truncate">{pkg.location}</span>
-                      </div>
-                    )}
-                    {pkg.region && (
-                      <div className="flex items-center gap-1.5 text-[11px] text-amber-900 font-bold bg-amber-50/90 px-2 py-0.5 rounded-md border border-amber-200/60 w-fit">
-                        <Compass className="w-3 h-3 text-amber-600 shrink-0" />
-                        <span>Region: {pkg.region}</span>
-                      </div>
-                    )}
-                  </div>
-
-                  <h3 
-                    onClick={() => handleOpenDestination(pkg)}
-                    className="text-base font-black text-slate-900 leading-snug line-clamp-2 mb-1.5 group-hover:text-teal-700 transition-colors cursor-pointer"
-                    title={`Click to open full page for ${pkg.title}`}
+            return (
+              <div
+                key={pkg.id}
+                id={`holiday-card-${pkg.id}`}
+                className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-teal-500 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group w-full min-w-0"
+              >
+                <div>
+                  {/* Image & Badges - Clickable to open full destination page */}
+                  <div 
+                    onClick={() => handleOpenDestination(packageForAction)}
+                    className="h-52 relative overflow-hidden cursor-pointer"
+                    title={`View full details & itinerary for ${pkg.title}`}
                   >
-                    {pkg.title}
-                  </h3>
+                    <img
+                      src={pkg.image}
+                      alt={pkg.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-black/30" />
 
-                  <p className="text-xs text-slate-500 line-clamp-2 mb-2.5">
-                    {pkg.destination}
-                  </p>
+                    {/* Top Badges */}
+                    <div className="absolute top-3 left-3 right-3 flex items-center justify-between pointer-events-none">
+                      <span className="bg-slate-900/85 backdrop-blur-xs text-white text-[11px] font-bold px-2.5 py-1 rounded-full border border-white/10 shadow-xs flex items-center gap-1">
+                        {pkg.isInternational ? <Globe className="w-3 h-3 text-cyan-400" /> : <Compass className="w-3 h-3 text-amber-400" />}
+                        <span>{pkg.theme}</span>
+                      </span>
 
-                  {/* Why Visit / Reason */}
-                  {pkg.reasonToVisit && (
-                    <div className="mb-3 bg-gradient-to-r from-orange-50/90 to-amber-50/70 p-2.5 rounded-xl border border-orange-200/70">
-                      <div className="flex items-center gap-1 text-[11px] font-black text-orange-950 uppercase tracking-wide mb-1">
-                        <Sparkles className="w-3 h-3 text-[#ff6a00]" />
-                        <span>Why Visit</span>
-                      </div>
-                      <p className="text-[11px] text-slate-700 leading-relaxed line-clamp-2">
-                        {pkg.reasonToVisit}
-                      </p>
+                      {pkg.badge && (
+                        <span className="bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 text-[10px] font-black px-2.5 py-1 rounded-full shadow-md">
+                          {pkg.badge}
+                        </span>
+                      )}
                     </div>
-                  )}
 
-                  {/* Highlights Bullet Preview */}
-                  {pkg.highlights && pkg.highlights.length > 0 && (
-                    <div className="space-y-1 mb-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
-                      {pkg.highlights.slice(0, 2).map((hl, i) => (
-                        <div key={i} className="flex items-start gap-1.5 text-[11px] text-slate-700 leading-tight">
-                          <Check className="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" />
-                          <span className="line-clamp-1">{hl}</span>
+                    {/* Bottom Duration & Rating over image */}
+                    <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs pointer-events-none">
+                      <div className="bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5 border border-white/15">
+                        <Clock className="w-3.5 h-3.5 text-teal-400" />
+                        <span>{currentDuration}</span>
+                      </div>
+
+                      <div className="bg-white/95 px-2 py-0.5 rounded-lg text-[11px] font-black text-slate-900 flex items-center gap-1 shadow-xs">
+                        ⭐ {pkg.rating} <span className="text-slate-500 font-normal">({pkg.reviewsCount})</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Package Details */}
+                  <div className="p-5 pb-3">
+                    {/* Location & Region Badges */}
+                    <div className="flex flex-col gap-1.5 mb-2.5">
+                      {pkg.location && (
+                        <div className="flex items-center gap-1.5 text-xs text-teal-900 font-bold bg-teal-50/90 px-2.5 py-1 rounded-lg border border-teal-200/60">
+                          <MapPin className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+                          <span className="truncate">{pkg.location}</span>
                         </div>
+                      )}
+                      {pkg.region && (
+                        <div className="flex items-center gap-1.5 text-[11px] text-amber-900 font-bold bg-amber-50/90 px-2 py-0.5 rounded-md border border-amber-200/60 w-fit">
+                          <Compass className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span>Region: {pkg.region}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    <h3 
+                      onClick={() => handleOpenDestination(packageForAction)}
+                      className="text-base font-black text-slate-900 leading-snug line-clamp-2 mb-1.5 group-hover:text-teal-700 transition-colors cursor-pointer"
+                      title={`Click to open full page for ${pkg.title}`}
+                    >
+                      {pkg.title}
+                    </h3>
+
+                    <p className="text-xs text-slate-500 line-clamp-2 mb-2.5">
+                      {pkg.destination}
+                    </p>
+
+                    {/* Duration Options Selector (for Manali & multi-duration packages) */}
+                    {hasOptions && (
+                      <div className="mb-3 p-2.5 bg-gradient-to-r from-orange-50/90 to-amber-50/80 rounded-xl border border-orange-200">
+                        <div className="flex items-center justify-between text-[11px] font-black text-slate-800 mb-1.5">
+                          <span className="flex items-center gap-1">
+                            <Clock className="w-3 h-3 text-orange-600" />
+                            <span>Select Duration:</span>
+                          </span>
+                          <span className="text-[10px] text-orange-800 font-extrabold bg-orange-100 px-1.5 py-0.2 rounded">
+                            2 Options Available
+                          </span>
+                        </div>
+                        <div className="grid grid-cols-2 gap-1.5">
+                          {pkg.durationOptions!.map((opt, optIdx) => (
+                            <button
+                              key={opt.duration}
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setSelectedDurationByPkg(prev => ({ ...prev, [pkg.id]: optIdx }));
+                              }}
+                              className={`py-1.5 px-2 rounded-lg text-left transition-all cursor-pointer border ${
+                                activeDurationIdx === optIdx
+                                  ? 'bg-slate-900 text-white border-slate-900 shadow-sm ring-1 ring-orange-400'
+                                  : 'bg-white text-slate-800 border-slate-200 hover:border-orange-300'
+                              }`}
+                            >
+                              <div className="text-[11px] font-extrabold truncate">{opt.duration}</div>
+                              <div className="text-xs font-black text-[#ff6a00] font-mono mt-0.5">
+                                ₹{opt.price.toLocaleString('en-IN')}
+                              </div>
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* First Booking Discount Pill */}
+                    <div className="mb-3 flex items-center justify-between bg-amber-50 border border-amber-200 rounded-lg px-2.5 py-1 text-[11px]">
+                      <div className="flex items-center gap-1 font-bold text-amber-900 truncate">
+                        <Tag className="w-3 h-3 text-[#ff6a00] shrink-0" />
+                        <span>Code: <strong className="text-slate-900 font-mono">FIRST501</strong> (₹501 OFF)</span>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleCopyFirst501();
+                        }}
+                        className="text-[10px] font-black text-orange-700 hover:text-orange-900 uppercase cursor-pointer shrink-0 ml-1.5"
+                      >
+                        {isCouponCopied ? 'Copied!' : 'Copy Code'}
+                      </button>
+                    </div>
+
+                    {/* Why Visit / Reason */}
+                    {pkg.reasonToVisit && (
+                      <div className="mb-3 bg-gradient-to-r from-orange-50/90 to-amber-50/70 p-2.5 rounded-xl border border-orange-200/70">
+                        <div className="flex items-center gap-1 text-[11px] font-black text-orange-950 uppercase tracking-wide mb-1">
+                          <Sparkles className="w-3 h-3 text-[#ff6a00]" />
+                          <span>Why Visit</span>
+                        </div>
+                        <p className="text-[11px] text-slate-700 leading-relaxed line-clamp-2">
+                          {pkg.reasonToVisit}
+                        </p>
+                      </div>
+                    )}
+
+                    {/* Highlights Bullet Preview */}
+                    {pkg.highlights && pkg.highlights.length > 0 && (
+                      <div className="space-y-1 mb-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100">
+                        {pkg.highlights.slice(0, 2).map((hl, i) => (
+                          <div key={i} className="flex items-start gap-1.5 text-[11px] text-slate-700 leading-tight">
+                            <Check className="w-3 h-3 text-emerald-600 shrink-0 mt-0.5" />
+                            <span className="line-clamp-1">{hl}</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Tags */}
+                    <div className="flex flex-wrap gap-1 mb-2">
+                      {pkg.tags.map((tag, i) => (
+                        <span key={i} className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-medium">
+                          {tag}
+                        </span>
                       ))}
                     </div>
-                  )}
-
-                  {/* Tags */}
-                  <div className="flex flex-wrap gap-1 mb-2">
-                    {pkg.tags.map((tag, i) => (
-                      <span key={i} className="text-[10px] bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md font-medium">
-                        {tag}
-                      </span>
-                    ))}
                   </div>
                 </div>
-              </div>
 
-              {/* Price & Action Row */}
-              <div className="p-5 pt-3 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
-                <div>
-                  <span className="text-[11px] text-slate-400 line-through">
-                    ₹{pkg.originalPrice.toLocaleString('en-IN')}
-                  </span>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-xl font-black text-slate-900">
-                      ₹{pkg.price.toLocaleString('en-IN')}
+                {/* Price & Action Row */}
+                <div className="p-5 pt-3 border-t border-slate-100 flex items-center justify-between bg-slate-50/50">
+                  <div>
+                    <span className="text-[11px] text-slate-400 line-through">
+                      ₹{currentOriginalPrice.toLocaleString('en-IN')}
                     </span>
-                    <span className="text-[10px] text-slate-500 font-semibold">/ person</span>
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-xl font-black text-slate-900">
+                        ₹{currentPrice.toLocaleString('en-IN')}
+                      </span>
+                      <span className="text-[10px] text-slate-500 font-semibold">/ person</span>
+                    </div>
                   </div>
-                </div>
 
-                <div className="flex items-center gap-1.5">
-                  <a
-                    href={`https://wa.me/919334789099?text=Namaste%2C%20I%20want%20to%20inquire%20about%20${encodeURIComponent(pkg.title)}%20(${encodeURIComponent(pkg.duration)}%20-%20Rs.${pkg.price})`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="p-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="Chat on WhatsApp (+91 9334789099)"
-                  >
-                    <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
-                  </a>
+                  <div className="flex items-center gap-1.5">
+                    <a
+                      href={`https://wa.me/919334789099?text=Namaste%2C%20I%20want%20to%20inquire%20about%20${encodeURIComponent(packageForAction.title)}%20(${encodeURIComponent(packageForAction.duration)}%20-%20Rs.${packageForAction.price})`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="p-2 bg-emerald-50 hover:bg-emerald-100 text-emerald-700 border border-emerald-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                      title="Chat on WhatsApp (+91 9334789099)"
+                    >
+                      <MessageCircle className="w-3.5 h-3.5 text-emerald-600" />
+                    </a>
 
-                  {onQuickQrPay && (
+                    {onQuickQrPay && (
+                      <button
+                        type="button"
+                        onClick={() => onQuickQrPay(packageForAction)}
+                        className="p-2 bg-gradient-to-r from-[#00baf2] to-[#002970] hover:opacity-90 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-xs"
+                        title="Direct Paytm UPI QR Payment & Booking"
+                      >
+                        <QrCode className="w-3.5 h-3.5 text-white" />
+                        <span className="hidden sm:inline">QR Pay</span>
+                      </button>
+                    )}
+
+                    {/* Details / Full Page View Button */}
                     <button
                       type="button"
-                      onClick={() => onQuickQrPay(pkg)}
-                      className="p-2 bg-gradient-to-r from-[#00baf2] to-[#002970] hover:opacity-90 text-white rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer shadow-xs"
-                      title="Direct Paytm UPI QR Payment & Booking"
+                      onClick={() => handleOpenDestination(packageForAction)}
+                      className="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                      title={`Open dedicated page for ${packageForAction.title}`}
                     >
-                      <QrCode className="w-3.5 h-3.5 text-white" />
-                      <span className="hidden sm:inline">QR Pay</span>
+                      <Eye className="w-3.5 h-3.5 text-teal-600" />
+                      <span>View Page</span>
                     </button>
-                  )}
 
-                  {/* Details / Full Page View Button */}
-                  <button
-                    type="button"
-                    onClick={() => handleOpenDestination(pkg)}
-                    className="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title={`Open dedicated page for ${pkg.title}`}
-                  >
-                    <Eye className="w-3.5 h-3.5 text-teal-600" />
-                    <span>View Page</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    id={`book-holiday-btn-${pkg.id}`}
-                    onClick={() => onBookHoliday(pkg)}
-                    className="px-3 sm:px-4 py-2 bg-gradient-to-r from-[#ff6a00] to-orange-600 hover:from-orange-500 hover:to-[#ff6a00] text-white font-extrabold text-xs rounded-xl shadow-md shadow-orange-950/30 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
-                  >
-                    <span>BOOK</span>
-                    <ChevronRight className="w-3.5 h-3.5" />
-                  </button>
+                    <button
+                      type="button"
+                      id={`book-holiday-btn-${pkg.id}`}
+                      onClick={() => onBookHoliday(packageForAction)}
+                      className="px-3 sm:px-4 py-2 bg-gradient-to-r from-[#ff6a00] to-orange-600 hover:from-orange-500 hover:to-[#ff6a00] text-white font-extrabold text-xs rounded-xl shadow-md shadow-orange-950/30 active:scale-95 transition-all flex items-center gap-1 cursor-pointer"
+                    >
+                      <span>BOOK</span>
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       )}
 

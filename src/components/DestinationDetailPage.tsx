@@ -43,11 +43,39 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
 }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
+  const [isCouponCopied, setIsCouponCopied] = useState(false);
   const [activeTab, setActiveTab] = useState<'itinerary' | 'highlights' | 'inclusions' | 'guidelines'>('itinerary');
+  const [selectedOptionIdx, setSelectedOptionIdx] = useState<number>(() => {
+    if (destination.durationOptions && destination.durationOptions.length > 0) {
+      const idx = destination.durationOptions.findIndex(o => o.nights === 3);
+      return idx >= 0 ? idx : 0;
+    }
+    return 0;
+  });
+
+  // Calculate active duration option values
+  const hasOptions = Boolean(destination.durationOptions && destination.durationOptions.length > 1);
+  const activeOption = destination.durationOptions ? destination.durationOptions[selectedOptionIdx] : null;
+  const currentPrice = activeOption ? activeOption.price : destination.price;
+  const currentOriginalPrice = activeOption ? activeOption.originalPrice : destination.originalPrice;
+  const currentDuration = activeOption ? activeOption.duration : destination.duration;
+
+  const packageForAction: HolidayPackage = {
+    ...destination,
+    price: currentPrice,
+    originalPrice: currentOriginalPrice,
+    duration: currentDuration,
+    nights: activeOption ? activeOption.nights : destination.nights,
+    days: activeOption ? activeOption.days : destination.days
+  };
 
   // Scroll to top when destination changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (destination.durationOptions && destination.durationOptions.length > 0) {
+      const idx = destination.durationOptions.findIndex(o => o.nights === 3);
+      setSelectedOptionIdx(idx >= 0 ? idx : 0);
+    }
   }, [destination.id]);
 
   // Construct absolute shareable URL
@@ -61,7 +89,7 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
   };
 
   const shareUrl = getShareUrl();
-  const shareText = `🏔️ Check out ${destination.title} on Moksha Gateways!\n⏱️ Duration: ${destination.duration}\n💰 Price: ₹${destination.price.toLocaleString('en-IN')}/person\n📍 Places: ${destination.destination}\n\n👉 View details & book here: ${shareUrl}`;
+  const shareText = `🏔️ Check out ${destination.title} on Moksha Gateways!\n⏱️ Duration: ${currentDuration}\n💰 Price: ₹${currentPrice.toLocaleString('en-IN')}/person\n📍 Places: ${destination.destination}\n\n👉 View details & book here: ${shareUrl}`;
 
   const handleCopyLink = async () => {
     try {
@@ -148,10 +176,10 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
 
             <button
               id="top-book-now-btn"
-              onClick={() => onBook(destination)}
+              onClick={() => onBook(packageForAction)}
               className="hidden sm:flex items-center gap-1 px-4 py-1.5 bg-gradient-to-r from-[#ff6a00] to-orange-600 hover:from-orange-500 hover:to-[#ff6a00] text-white font-black text-xs rounded-full shadow-sm cursor-pointer active:scale-95 transition-all"
             >
-              <span>Book Now • ₹{destination.price.toLocaleString('en-IN')}</span>
+              <span>Book Now • ₹{currentPrice.toLocaleString('en-IN')}</span>
             </button>
           </div>
         </div>
@@ -220,7 +248,7 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
             <div className="flex flex-wrap items-center gap-4 sm:gap-6 pt-2 text-xs sm:text-sm">
               <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
                 <Clock className="w-4 h-4 text-[#ff6a00]" />
-                <span className="font-bold">{destination.duration}</span>
+                <span className="font-bold">{currentDuration}</span>
               </div>
 
               <div className="flex items-center gap-1.5 bg-black/50 backdrop-blur-md px-3 py-1.5 rounded-xl border border-white/10">
@@ -472,10 +500,53 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
           {/* Right Column: Sticky Booking Card */}
           <div className="lg:col-span-1 sticky top-28 space-y-4">
             <div className="bg-white rounded-3xl shadow-xl border border-slate-200/90 p-6 overflow-hidden relative">
+              {/* Duration Options Selector (e.g. Manali 2N/3D ₹5,999 vs 3N/4D ₹6,999) */}
+              {hasOptions && (
+                <div className="mb-4 p-3 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
+                  <div className="flex items-center justify-between text-xs font-black text-slate-900 mb-2">
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-orange-600" />
+                      <span>Choose Tour Duration:</span>
+                    </span>
+                    <span className="text-[10px] text-orange-700 bg-orange-100 px-2 py-0.5 rounded-full font-bold">
+                      2 Plans Available
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {destination.durationOptions!.map((opt, idx) => (
+                      <button
+                        key={opt.duration}
+                        type="button"
+                        onClick={() => setSelectedOptionIdx(idx)}
+                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                          selectedOptionIdx === idx
+                            ? 'bg-slate-900 text-white border-slate-900 shadow-md ring-2 ring-orange-400'
+                            : 'bg-white text-slate-800 border-slate-300 hover:border-orange-300'
+                        }`}
+                      >
+                        <div className="text-xs font-extrabold">{opt.duration}</div>
+                        <div className="text-sm font-black text-[#ff6a00] mt-0.5">
+                          ₹{opt.price.toLocaleString('en-IN')}
+                        </div>
+                        {opt.badge && (
+                          <div className={`text-[9px] font-bold mt-1 px-1.5 py-0.5 rounded w-fit ${
+                            selectedOptionIdx === idx ? 'bg-white/20 text-orange-200' : 'bg-orange-100 text-orange-900'
+                          }`}>
+                            {opt.badge}
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Header Price */}
               <div className="border-b border-slate-100 pb-5 mb-5">
                 <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-slate-500">Total Price Per Person</span>
+                  <span className="text-xs font-bold text-slate-500">
+                    Price for {currentDuration}
+                  </span>
                   <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200">
                     Govt. Subsidized Rates
                   </span>
@@ -483,16 +554,41 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
 
                 <div className="mt-2 flex items-baseline gap-2">
                   <span className="text-3xl sm:text-4xl font-black text-slate-900">
-                    ₹{destination.price.toLocaleString('en-IN')}
+                    ₹{currentPrice.toLocaleString('en-IN')}
                   </span>
                   <span className="text-sm text-slate-400 line-through">
-                    ₹{destination.originalPrice.toLocaleString('en-IN')}
+                    ₹{currentOriginalPrice.toLocaleString('en-IN')}
                   </span>
                   <span className="text-xs font-bold text-[#ff6a00]">
-                    ({Math.round(((destination.originalPrice - destination.price) / destination.originalPrice) * 100)}% OFF)
+                    ({Math.round(((currentOriginalPrice - currentPrice) / currentOriginalPrice) * 100)}% OFF)
                   </span>
                 </div>
                 <span className="text-[11px] text-slate-400">Includes stays, transfers, breakfast, guide & all permits</span>
+
+                {/* First Booking Discount Coupon Block */}
+                <div className="mt-3.5 p-3 bg-gradient-to-r from-amber-50 to-orange-50 rounded-2xl border border-amber-300 flex items-center justify-between gap-2">
+                  <div>
+                    <div className="flex items-center gap-1 text-xs font-black text-amber-950">
+                      <Sparkles className="w-3.5 h-3.5 text-[#ff6a00]" />
+                      <span>First Booking: Flat ₹501 OFF</span>
+                    </div>
+                    <p className="text-[11px] text-slate-600 mt-0.5">
+                      Use coupon code <strong className="font-mono text-slate-900 font-black">FIRST501</strong> at checkout
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText('FIRST501');
+                      setIsCouponCopied(true);
+                      setTimeout(() => setIsCouponCopied(false), 2500);
+                    }}
+                    className="px-2.5 py-1.5 bg-slate-900 hover:bg-slate-800 text-white text-[11px] font-black rounded-xl cursor-pointer flex items-center gap-1 shrink-0 shadow-xs"
+                  >
+                    {isCouponCopied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3 text-amber-400" />}
+                    <span>{isCouponCopied ? 'Copied ₹501' : 'FIRST501'}</span>
+                  </button>
+                </div>
               </div>
 
               {/* Action Buttons */}
@@ -500,17 +596,17 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
                 <button
                   type="button"
                   id="destination-page-book-btn"
-                  onClick={() => onBook(destination)}
+                  onClick={() => onBook(packageForAction)}
                   className="w-full py-3.5 bg-gradient-to-r from-[#ff6a00] to-orange-600 hover:from-orange-500 hover:to-[#ff6a00] text-white font-black text-sm rounded-2xl shadow-lg shadow-orange-950/20 active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer uppercase tracking-wider"
                 >
-                  <span>PROCEED TO BOOK</span>
+                  <span>PROCEED TO BOOK ({currentDuration})</span>
                   <ChevronRight className="w-4 h-4" />
                 </button>
 
                 <button
                   type="button"
                   id="destination-page-qr-pay-btn"
-                  onClick={() => onQuickQrPay(destination)}
+                  onClick={() => onQuickQrPay(packageForAction)}
                   className="w-full py-3 bg-gradient-to-r from-[#00baf2] via-[#04285c] to-[#002970] hover:opacity-95 text-white font-black text-xs rounded-2xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer border border-sky-300"
                 >
                   <QrCode className="w-4 h-4 text-[#00baf2]" />
@@ -518,7 +614,7 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
                 </button>
 
                 <a
-                  href={`https://wa.me/919334789099?text=Namaste%2C%20I%20am%20interested%20in%20booking%20${encodeURIComponent(destination.title)}%20(${encodeURIComponent(destination.duration)}%20-%20Rs.${destination.price}).%20Please%20guide%20me.`}
+                  href={`https://wa.me/919334789099?text=Namaste%2C%20I%20am%20interested%20in%20booking%20${encodeURIComponent(destination.title)}%20(${encodeURIComponent(currentDuration)}%20-%20Rs.${currentPrice}).%20Please%20guide%20me.`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="w-full py-3 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border border-emerald-300 font-bold text-xs rounded-2xl transition-all flex items-center justify-center gap-2"

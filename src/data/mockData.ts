@@ -783,7 +783,7 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     ]
   },
 
-  // 4. Manali Kasol (3N/4D, Price 7000)
+  // 4. Manali Kasol (3N/4D @ ₹6,999 & 2N/3D @ ₹5,999)
   {
     id: 'hol-manali-kasol',
     title: 'Manali & Kasol Parvati Valley Mountain Getaway',
@@ -791,31 +791,52 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     location: 'Kullu & Parvati Valley, Himachal Pradesh, India',
     region: 'Himachal Pradesh • Kullu & Parvati Valley',
     reasonToVisit: 'Snow adventure sports at Solang Valley, soothing hot sulfur mineral springs at Manikaran Sahib, and peaceful riverside cafes along the gushing Parvati River.',
-    duration: '3 Nights / 4 Days',
+    duration: '3 Nights / 4 Days (or 2N/3D)',
     nights: 3,
     days: 4,
-    rating: 4.86,
-    reviewsCount: 1320,
-    price: 7000,
-    originalPrice: 9500,
+    rating: 4.88,
+    reviewsCount: 1420,
+    price: 6999,
+    originalPrice: 9499,
     image: 'https://images.unsplash.com/photo-1571401835393-8c5f35328320?auto=format&fit=crop&w=800&q=80',
     theme: 'Mountain Vibe & Cafe Trails',
     category: 'himachal',
     isInternational: false,
-    badge: 'Super Value 3N/4D ₹7,000',
-    tags: ['Manikaran Hot Springs', 'Solang Adventure', 'Parvati River Camp', 'Riverside Cafes'],
+    badge: '2N/3D ₹5,999 | 3N/4D ₹6,999',
+    tags: ['2N/3D ₹5,999', '3N/4D ₹6,999', 'Manikaran Hot Springs', 'Solang Adventure', 'Parvati River Camp', 'Riverside Cafes'],
+    durationOptions: [
+      {
+        duration: '2 Nights / 3 Days',
+        nights: 2,
+        days: 3,
+        price: 5999,
+        originalPrice: 7999,
+        badge: 'Weekend Special (₹5,999)',
+        description: 'Hadimba Devi Temple, Solang Valley Snow Point, Mall Road & Kasol riverside walk'
+      },
+      {
+        duration: '3 Nights / 4 Days',
+        nights: 3,
+        days: 4,
+        price: 6999,
+        originalPrice: 9499,
+        badge: 'Best Value (₹6,999)',
+        description: 'Complete Circuit: Solang Valley, Atal Tunnel, Kasol camps & Manikaran Sahib hot springs'
+      }
+    ],
     highlights: [
-      '3 Nights / 4 Days complete tour at flat ₹7,000',
+      'Choose Duration: 2 Nights / 3 Days at flat ₹5,999 OR 3 Nights / 4 Days at flat ₹6,999',
+      'Special Welcome Offer: Use Coupon FIRST501 for instant ₹501 OFF on First Booking!',
       'Experience healing natural sulfur hot springs at Manikaran Sahib Gurudwara',
       'Solang Valley snow activities, paragliding and zorbing',
       'Riverside campfire and cafe hopping in magical Kasol'
     ],
-    inclusions: ['3 Nights stay in 3-star hotel & riverside Swiss camp', 'Daily Breakfast & Dinner', 'All local sightseeing transfers', 'Campfire & music evening'],
+    inclusions: ['Stay in 3-star hotel & riverside Swiss camp', 'Daily Breakfast & Dinner', 'All local sightseeing transfers in private vehicle', 'Campfire & music evening'],
     itinerary: [
       { day: 1, title: 'Arrival in Manali & Local Exploration', description: 'Check-in, visit Hadimba Devi Temple, Vashisht Hot Springs and Mall Road.' },
       { day: 2, title: 'Solang Valley Adventure & Atal Tunnel', description: 'Explore Solang Valley for ropeway, paragliding and drive through Atal Tunnel.' },
-      { day: 3, title: 'Drive to Kasol & Manikaran Sahib', description: 'Head to Parvati Valley, holy dip at Manikaran Sahib hot springs and Kasol market.' },
-      { day: 4, title: 'Kasol Riverside Walk & Departure', description: 'Morning leisure by Parvati River, Chalal village hike and return transfer.' }
+      { day: 3, title: 'Drive to Kasol & Manikaran Sahib', description: 'Head to Parvati Valley, holy dip at Manikaran Sahib hot springs and Kasol market. (Departure for 2N/3D plan).' },
+      { day: 4, title: 'Kasol Riverside Walk & Departure', description: 'Morning leisure by Parvati River, Chalal village hike and return transfer (Included in 3N/4D plan).' }
     ]
   },
 
@@ -1787,6 +1808,17 @@ export const MOCK_CABS: Cab[] = [
 ];
 
 export const MOCK_OFFERS: Offer[] = [
+  {
+    id: 'off-first501',
+    code: 'FIRST501',
+    title: 'Flat ₹501 OFF on First Booking',
+    description: 'Special welcome discount for first-time bookings. Valid on Manali packages, holidays, yatras, flights & hotels.',
+    category: 'all',
+    discountValue: 501,
+    minBooking: 2500,
+    badge: 'FIRST BOOKING SPECIAL',
+    validTill: 'Ongoing 2026'
+  },
   {
     id: 'off-1',
     code: 'MOKSHA1000',

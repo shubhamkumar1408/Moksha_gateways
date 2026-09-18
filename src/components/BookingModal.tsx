@@ -56,18 +56,35 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [couponError, setCouponError] = useState('');
   const [couponSuccess, setCouponSuccess] = useState('');
 
+  // Duration Options (e.g. Manali 2N/3D vs 3N/4D)
+  const [selectedDurationIdx, setSelectedDurationIdx] = useState<number>(() => {
+    if (bookingItem?.durationOptions && bookingItem.durationOptions.length > 0) {
+      const idx = bookingItem.durationOptions.findIndex(
+        (o: any) => o.duration === bookingItem.duration || o.price === bookingItem.price
+      );
+      return idx >= 0 ? idx : 0;
+    }
+    return 0;
+  });
+
   // Payment step
   const [step, setStep] = useState<'details' | 'confirm'>('details');
   const [confirmedBooking, setConfirmedBooking] = useState<Booking | null>(null);
   const [paymentMethod, setPaymentMethod] = useState<'upi' | 'card' | 'netbanking'>('upi');
 
+  // Selected Option
+  const activeDurationOption = bookingItem?.durationOptions?.[selectedDurationIdx];
+
   // Calculate Base Price
   const basePrice = Number(
+    activeDurationOption?.price ||
     bookingItem.price || 
     bookingItem.pricePerNight || 
     bookingItem.estimatedTotal || 
     5000
   );
+
+  const currentDurationText = activeDurationOption?.duration || bookingItem.duration || '';
 
   const prasadCost = addPrasadBox ? 499 : 0;
   const insuranceCost = addTravelInsurance ? 199 : 0;
@@ -84,13 +101,16 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     setPassengers(updated);
   };
 
-  const handleApplyCoupon = (e: React.FormEvent) => {
-    e.preventDefault();
+  const applyPromoDirect = (codeToApply: string) => {
+    setPromoCode(codeToApply);
     setCouponError('');
     setCouponSuccess('');
 
-    const code = promoCode.trim().toUpperCase();
-    if (code === 'MOKSHA1000') {
+    const code = codeToApply.trim().toUpperCase();
+    if (code === 'FIRST501' || code === 'FIRSTBOOK501' || code === 'MOKSHA501' || code === 'FIRST500') {
+      setDiscount(501);
+      setCouponSuccess('🎉 First Booking Discount: Flat ₹501 off applied successfully!');
+    } else if (code === 'MOKSHA1000') {
       setDiscount(1000);
       setCouponSuccess('₹1,000 Special Yatra discount applied successfully!');
     } else if (code === 'SENIORCARE') {
@@ -100,8 +120,13 @@ export const BookingModal: React.FC<BookingModalProps> = ({
       setDiscount(600);
       setCouponSuccess('₹600 Welcome discount applied!');
     } else {
-      setCouponError('Invalid coupon code. Try MOKSHA1000 or SENIORCARE.');
+      setCouponError('Invalid coupon code. Try FIRST501 for flat ₹501 off on first booking!');
     }
+  };
+
+  const handleApplyCoupon = (e: React.FormEvent) => {
+    e.preventDefault();
+    applyPromoDirect(promoCode);
   };
 
   const handleUpiConfirmed = (details: {
@@ -205,6 +230,47 @@ export const BookingModal: React.FC<BookingModalProps> = ({
         <div className="p-6 max-h-[75vh] overflow-y-auto">
           {step === 'details' ? (
             <form onSubmit={handleProcessPayment} className="space-y-6">
+              {/* Duration Options Selector if package has multiple duration choices (e.g. Manali) */}
+              {bookingItem?.durationOptions && bookingItem.durationOptions.length > 1 && (
+                <div className="p-3.5 bg-gradient-to-r from-orange-50 to-amber-50 rounded-2xl border border-orange-200">
+                  <div className="flex items-center justify-between text-xs font-black text-slate-900 mb-2">
+                    <span className="flex items-center gap-1.5">
+                      <Clock className="w-3.5 h-3.5 text-orange-600" />
+                      <span>Select Package Duration:</span>
+                    </span>
+                    <span className="text-[10px] text-orange-800 bg-orange-100 px-2 py-0.5 rounded-full font-bold">
+                      Current: {currentDurationText}
+                    </span>
+                  </div>
+                  <div className="grid grid-cols-2 gap-2">
+                    {bookingItem.durationOptions.map((opt: any, idx: number) => (
+                      <button
+                        key={opt.duration}
+                        type="button"
+                        onClick={() => setSelectedDurationIdx(idx)}
+                        className={`p-2.5 rounded-xl border text-left transition-all cursor-pointer ${
+                          selectedDurationIdx === idx
+                            ? 'bg-slate-900 text-white border-slate-900 shadow-sm ring-2 ring-orange-400'
+                            : 'bg-white text-slate-800 border-slate-300 hover:border-orange-300'
+                        }`}
+                      >
+                        <div className="text-xs font-extrabold">{opt.duration}</div>
+                        <div className="text-sm font-black text-[#ff6a00] mt-0.5">
+                          ₹{opt.price.toLocaleString('en-IN')}
+                        </div>
+                        {opt.badge && (
+                          <div className={`text-[9px] font-bold mt-1 px-1.5 py-0.2 rounded w-fit ${
+                            selectedDurationIdx === idx ? 'bg-white/20 text-orange-200' : 'bg-orange-100 text-orange-900'
+                          }`}>
+                            {opt.badge}
+                          </div>
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               {/* Primary Contact Info */}
               <div>
                 <h4 className="text-xs font-bold uppercase text-slate-500 tracking-wider mb-3 flex items-center gap-1.5">
@@ -351,15 +417,20 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
               {/* Coupon Code Section */}
               <div className="p-4 bg-slate-50 rounded-xl border border-slate-200">
-                <span className="text-xs font-bold uppercase text-slate-600 block mb-2">
-                  Have a Promo Code or Bank Coupon?
-                </span>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-bold uppercase text-slate-600 block">
+                    Have a Promo Code or Bank Coupon?
+                  </span>
+                  <span className="text-[10px] text-[#ff6a00] font-black bg-orange-50 border border-orange-200 px-2 py-0.5 rounded-full">
+                    1st Booking: ₹501 OFF
+                  </span>
+                </div>
                 <div className="flex gap-2">
                   <input
                     type="text"
                     value={promoCode}
                     onChange={(e) => setPromoCode(e.target.value)}
-                    placeholder="Try MOKSHA1000 or SENIORCARE"
+                    placeholder="Enter code (e.g. FIRST501, MOKSHA1000)"
                     className="flex-1 p-2 rounded-lg border border-slate-300 text-xs font-bold uppercase"
                   />
                   <button
@@ -370,8 +441,35 @@ export const BookingModal: React.FC<BookingModalProps> = ({
                     APPLY
                   </button>
                 </div>
-                {couponSuccess && <p className="text-xs text-emerald-700 font-bold mt-1.5">{couponSuccess}</p>}
-                {couponError && <p className="text-xs text-red-600 font-bold mt-1.5">{couponError}</p>}
+
+                {/* Quick 1-Click Coupon Pills */}
+                <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
+                  <span className="text-[10px] font-bold text-slate-500">Quick Apply:</span>
+                  <button
+                    type="button"
+                    onClick={() => applyPromoDirect('FIRST501')}
+                    className="px-2 py-0.5 bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300 rounded-md text-[10px] font-extrabold cursor-pointer transition-all"
+                  >
+                    🎉 FIRST501 (₹501 OFF)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyPromoDirect('MOKSHA1000')}
+                    className="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md text-[10px] font-bold cursor-pointer transition-all"
+                  >
+                    MOKSHA1000 (₹1,000 OFF)
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => applyPromoDirect('SENIORCARE')}
+                    className="px-2 py-0.5 bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-md text-[10px] font-bold cursor-pointer transition-all"
+                  >
+                    SENIORCARE (₹1,500 OFF)
+                  </button>
+                </div>
+
+                {couponSuccess && <p className="text-xs text-emerald-700 font-bold mt-2">{couponSuccess}</p>}
+                {couponError && <p className="text-xs text-red-600 font-bold mt-2">{couponError}</p>}
               </div>
 
               {/* Fare Summary Breakdown */}

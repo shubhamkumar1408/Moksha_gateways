@@ -97,6 +97,16 @@ export interface YatraPackage {
   nextDates: string[];
 }
 
+export interface HolidayDurationOption {
+  duration: string;
+  nights: number;
+  days: number;
+  price: number;
+  originalPrice: number;
+  badge?: string;
+  description?: string;
+}
+
 export interface HolidayPackage {
   id: string;
   title: string;
@@ -120,6 +130,7 @@ export interface HolidayPackage {
   itinerary?: { day: number; title: string; description: string; stay?: string; meals?: string }[];
   isInternational?: boolean;
   badge?: string;
+  durationOptions?: HolidayDurationOption[];
 }
 
 export interface TrainClassAvailability {

@@ -24,7 +24,7 @@ export default function App() {
   const [activeService, setActiveService] = useState<ServiceType>('holidays');
   const [language, setLanguage] = useState<'EN' | 'HI'>('EN');
   const [userName, setUserName] = useState<string | null>(() => {
-    return localStorage.getItem('moksha_user_name') || 'Shubham Dutt';
+    return localStorage.getItem('moksha_user_name') || 'Rahul';
   });
 
   // Modal controls - Login modal opens automatically on page load as requested
@@ -148,9 +148,9 @@ export default function App() {
         title: 'Divine Kashi Vishwanath & Ayodhya Ram Mandir Spiritual Circuit',
         routeOrLocation: 'Varanasi • Ayodhya • Prayagraj Sangam',
         travelDate: '24 Sep 2026',
-        passengers: [{ name: 'Shubham Dutt', age: 29, gender: 'male', darshanPassRequired: true }],
+        passengers: [{ name: 'Rahul', age: 29, gender: 'male', darshanPassRequired: true }],
         primaryContact: {
-          name: 'Shubham Dutt',
+          name: 'Rahul',
           email: 'duttshubham68@gmail.com',
           phone: '+91 9876543210'
         },
