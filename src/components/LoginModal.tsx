@@ -36,20 +36,24 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   return (
     <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto">
       <div className="bg-white rounded-2xl max-w-md w-full shadow-2xl overflow-hidden border border-slate-200">
-        <div className="bg-[#08182b] text-white p-5 flex items-center justify-between">
+        <div className="bg-[#08182b] text-white p-4 sm:p-5 flex items-center justify-between border-b border-slate-800">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 flex items-center justify-center font-bold">
-              <User className="w-4 h-4" />
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-500 to-orange-500 text-slate-950 flex items-center justify-center font-bold shadow-xs">
+              <User className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold">Login to Moksha Gateways</h3>
-              <p className="text-xs text-slate-400">Access your saved yatras, e-tickets & discounts</p>
+              <h3 className="text-base font-black">Login / Sign In</h3>
+              <p className="text-xs text-slate-400">Moksha Gateways Pilgrimage & Holiday Portal</p>
             </div>
           </div>
           <button
+            id="login-modal-close-btn"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-slate-800 hover:bg-slate-700 text-slate-300 flex items-center justify-center"
+            className="px-2.5 py-1.5 rounded-full bg-slate-800 hover:bg-rose-600 text-slate-200 hover:text-white flex items-center gap-1 text-xs font-bold transition-all cursor-pointer border border-slate-700 shadow-xs active:scale-95"
+            title="Close / बाद में करें"
+            aria-label="Close login popup"
           >
+            <span className="text-[11px] font-bold">Close</span>
             <X className="w-4 h-4" />
           </button>
         </div>
@@ -86,9 +90,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
               <button
                 type="submit"
-                className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-xs rounded-xl shadow-md cursor-pointer uppercase tracking-wider"
+                className="w-full py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-slate-950 font-black text-xs rounded-xl shadow-md cursor-pointer uppercase tracking-wider active:scale-95 transition-all"
               >
                 CONTINUE WITH OTP
+              </button>
+
+              <button
+                type="button"
+                onClick={onClose}
+                className="w-full py-2 text-xs font-bold text-slate-500 hover:text-[#ff6a00] transition-colors cursor-pointer text-center block"
+              >
+                Skip for now & explore website →
               </button>
 
               <p className="text-[11px] text-slate-500 text-center leading-relaxed">

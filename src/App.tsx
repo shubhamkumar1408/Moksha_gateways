@@ -16,8 +16,9 @@ import { QuickQrPaymentModal } from './components/QuickQrPaymentModal';
 import { Footer } from './components/Footer';
 import { WhatsAppContactBar } from './components/WhatsAppContactBar';
 import { LiveBookingPopup } from './components/LiveBookingPopup';
+import { DestinationDetailPage } from './components/DestinationDetailPage';
 import { ServiceType, Booking, Flight, Hotel, YatraPackage, HolidayPackage, Train, Cab, TrainClassAvailability } from './types';
-import { MOCK_YATRAS } from './data/mockData';
+import { MOCK_YATRAS, MOCK_HOLIDAYS } from './data/mockData';
 
 export default function App() {
   const [activeService, setActiveService] = useState<ServiceType>('holidays');
@@ -26,13 +27,102 @@ export default function App() {
     return localStorage.getItem('moksha_user_name') || 'Shubham Dutt';
   });
 
-  // Modal controls
+  // Modal controls - Login modal opens automatically on page load as requested
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(true);
   const [isAiPlannerOpen, setIsAiPlannerOpen] = useState(false);
   const [isBookingsModalOpen, setIsBookingsModalOpen] = useState(false);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isQuickQrOpen, setIsQuickQrOpen] = useState(false);
   const [quickQrTarget, setQuickQrTarget] = useState<{ title?: string; price?: number } | undefined>(undefined);
+
+  // Dedicated destination page routing (URL sync with ?destination=...)
+  const [selectedDestinationId, setSelectedDestinationId] = useState<string | null>(() => {
+    if (typeof window !== 'undefined') {
+      const params = new URLSearchParams(window.location.search);
+      return params.get('destination') || params.get('dest') || params.get('package') || null;
+    }
+    return null;
+  });
+
+  // Listen to browser Back/Forward navigation
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      setSelectedDestinationId(params.get('destination') || params.get('dest') || params.get('package') || null);
+    };
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  const handleSelectDestination = (pkgOrId: HolidayPackage | string) => {
+    const id = typeof pkgOrId === 'string' ? pkgOrId : pkgOrId.id;
+    setSelectedDestinationId(id);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.set('destination', id);
+      window.history.pushState({ destinationId: id }, '', url.toString());
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleBackToDestinations = () => {
+    setSelectedDestinationId(null);
+    if (typeof window !== 'undefined') {
+      const url = new URL(window.location.href);
+      url.searchParams.delete('destination');
+      url.searchParams.delete('dest');
+      url.searchParams.delete('package');
+      window.history.pushState(null, '', url.pathname + (url.search ? url.search : ''));
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  // Find active destination package
+  const currentDestination = React.useMemo(() => {
+    if (!selectedDestinationId) return null;
+    const cleanId = selectedDestinationId.toLowerCase().trim();
+
+    // 1. Direct match in MOCK_HOLIDAYS
+    const foundInHolidays = MOCK_HOLIDAYS.find(
+      h => h.id.toLowerCase() === cleanId ||
+           h.id.replace('hol-', '').toLowerCase() === cleanId ||
+           h.title.toLowerCase().includes(cleanId) ||
+           h.destination.toLowerCase().includes(cleanId)
+    );
+    if (foundInHolidays) return foundInHolidays;
+
+    // 2. Direct match in MOCK_YATRAS mapped to HolidayPackage
+    const foundInYatra = MOCK_YATRAS.find(
+      y => y.id.toLowerCase() === cleanId ||
+           y.title.toLowerCase().includes(cleanId) ||
+           y.location.toLowerCase().includes(cleanId)
+    );
+    if (foundInYatra) {
+      return {
+        id: foundInYatra.id,
+        title: foundInYatra.title,
+        destination: foundInYatra.placesCovered.join(' • '),
+        location: foundInYatra.location,
+        duration: `${foundInYatra.nights}N / ${foundInYatra.days}D`,
+        nights: foundInYatra.nights,
+        days: foundInYatra.days,
+        rating: foundInYatra.rating,
+        reviewsCount: foundInYatra.reviewsCount,
+        price: foundInYatra.price,
+        originalPrice: foundInYatra.originalPrice,
+        image: foundInYatra.image,
+        theme: foundInYatra.circuit,
+        tags: foundInYatra.placesCovered,
+        highlights: foundInYatra.highlights,
+        inclusions: foundInYatra.inclusions,
+        itinerary: foundInYatra.itinerary,
+        badge: foundInYatra.badge || 'Spiritual Circuit',
+        reasonToVisit: `A holy sacred circuit covering ${foundInYatra.location} with verified priest darshan, IRCTC certified transfers, and pure satvik meals.`
+      } as HolidayPackage;
+    }
+
+    return null;
+  }, [selectedDestinationId]);
 
   // Active item to book
   const [itemToBook, setItemToBook] = useState<any>(null);
@@ -173,7 +263,9 @@ export default function App() {
         activeService={activeService}
         onSelectService={(s) => {
           setActiveService(s);
-          // Scroll smoothly to top search card
+          if (selectedDestinationId) {
+            handleBackToDestinations();
+          }
           window.scrollTo({ top: 0, behavior: 'smooth' });
         }}
         bookingsCount={bookings.length}
@@ -185,76 +277,95 @@ export default function App() {
         onToggleLanguage={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
       />
 
-      {/* Main Hero Search Component */}
-      <HeroSearch
-        activeService={activeService}
-        onSelectService={setActiveService}
-        onSearch={(params) => setSearchQuery(params)}
-        onOpenAiPlanner={() => setIsAiPlannerOpen(true)}
-        language={language}
-      />
-
-      {/* Results / Service View Area */}
-      <main className="flex-1">
-        {activeService === 'flights' && (
-          <FlightResults
-            onBookFlight={startFlightBooking}
-            fromCityName={searchQuery?.query?.from?.city || 'New Delhi'}
-            toCityName={searchQuery?.query?.to?.city || 'Varanasi'}
-            departureDate={searchQuery?.query?.departureDate || '2026-09-18'}
+      {/* If a destination is selected, open dedicated DestinationDetailPage with share options */}
+      {currentDestination ? (
+        <DestinationDetailPage
+          destination={currentDestination}
+          onBack={handleBackToDestinations}
+          onBook={startHolidayBooking}
+          onQuickQrPay={(pkg) => {
+            setQuickQrTarget({ title: pkg.title, price: pkg.price });
+            setIsQuickQrOpen(true);
+          }}
+          onSelectOtherDestination={handleSelectDestination}
+          allDestinations={MOCK_HOLIDAYS}
+        />
+      ) : (
+        <>
+          {/* Main Hero Search Component */}
+          <HeroSearch
+            activeService={activeService}
+            onSelectService={setActiveService}
+            onSearch={(params) => setSearchQuery(params)}
+            onOpenAiPlanner={() => setIsAiPlannerOpen(true)}
+            language={language}
           />
-        )}
 
-        {activeService === 'hotels' && (
-          <HotelResults
-            onBookHotel={startHotelBooking}
-            searchedCity={searchQuery?.query?.city}
-          />
-        )}
+          {/* Results / Service View Area */}
+          <main className="flex-1">
+            {activeService === 'flights' && (
+              <FlightResults
+                onBookFlight={startFlightBooking}
+                fromCityName={searchQuery?.query?.from?.city || 'New Delhi'}
+                toCityName={searchQuery?.query?.to?.city || 'Varanasi'}
+                departureDate={searchQuery?.query?.departureDate || '2026-09-18'}
+              />
+            )}
 
-        {activeService === 'yatras' && (
-          <YatraResults
-            onBookYatra={startYatraBooking}
-            filterCircuit={searchQuery?.query?.circuit}
-          />
-        )}
+            {activeService === 'hotels' && (
+              <HotelResults
+                onBookHotel={startHotelBooking}
+                searchedCity={searchQuery?.query?.city}
+              />
+            )}
 
-        {activeService === 'holidays' && (
-          <HolidaysSection 
-            onBookHoliday={startHolidayBooking} 
-            onQuickQrPay={(pkg) => {
-              setQuickQrTarget({ title: pkg.title, price: pkg.price });
-              setIsQuickQrOpen(true);
-            }}
-          />
-        )}
+            {activeService === 'yatras' && (
+              <YatraResults
+                onBookYatra={startYatraBooking}
+                filterCircuit={searchQuery?.query?.circuit}
+                onSelectDestination={handleSelectDestination}
+              />
+            )}
 
-        {activeService === 'trains' && (
-          <TrainAndCabResults
-            mode="trains"
-            onBookTrain={startTrainBooking}
-            onBookCab={startCabBooking}
-            fromCityName={searchQuery?.query?.from?.city}
-            toCityName={searchQuery?.query?.to?.city}
-          />
-        )}
+            {activeService === 'holidays' && (
+              <HolidaysSection 
+                onBookHoliday={startHolidayBooking} 
+                onQuickQrPay={(pkg) => {
+                  setQuickQrTarget({ title: pkg.title, price: pkg.price });
+                  setIsQuickQrOpen(true);
+                }}
+                onSelectDestination={handleSelectDestination}
+              />
+            )}
 
-        {activeService === 'cabs' && (
-          <TrainAndCabResults
-            mode="cabs"
-            onBookTrain={startTrainBooking}
-            onBookCab={startCabBooking}
-            fromCityName={searchQuery?.query?.from}
-            toCityName={searchQuery?.query?.to}
-          />
-        )}
+            {activeService === 'trains' && (
+              <TrainAndCabResults
+                mode="trains"
+                onBookTrain={startTrainBooking}
+                onBookCab={startCabBooking}
+                fromCityName={searchQuery?.query?.from?.city}
+                toCityName={searchQuery?.query?.to?.city}
+              />
+            )}
 
-        {/* Offers Section */}
-        <OffersSection />
+            {activeService === 'cabs' && (
+              <TrainAndCabResults
+                mode="cabs"
+                onBookTrain={startTrainBooking}
+                onBookCab={startCabBooking}
+                fromCityName={searchQuery?.query?.from}
+                toCityName={searchQuery?.query?.to}
+              />
+            )}
 
-        {/* Why Book with Moksha Gateways Trust Section */}
-        <WhyMoksha />
-      </main>
+            {/* Offers Section */}
+            <OffersSection />
+
+            {/* Why Book with Moksha Gateways Trust Section */}
+            <WhyMoksha />
+          </main>
+        </>
+      )}
 
       {/* Direct WhatsApp & Contact Info Section */}
       <WhatsAppContactBar />

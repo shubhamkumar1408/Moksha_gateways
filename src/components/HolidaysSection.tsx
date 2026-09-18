@@ -16,7 +16,8 @@ import {
   ShieldCheck,
   Calendar,
   MessageCircle,
-  QrCode
+  QrCode,
+  Share2
 } from 'lucide-react';
 import { HolidayPackage } from '../types';
 import { MOCK_HOLIDAYS } from '../data/mockData';
@@ -24,15 +25,25 @@ import { MOCK_HOLIDAYS } from '../data/mockData';
 interface HolidaysSectionProps {
   onBookHoliday: (holiday: HolidayPackage) => void;
   onQuickQrPay?: (holiday: HolidayPackage) => void;
+  onSelectDestination?: (holiday: HolidayPackage) => void;
 }
 
 export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ 
   onBookHoliday,
-  onQuickQrPay 
+  onQuickQrPay,
+  onSelectDestination
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [activePackageModal, setActivePackageModal] = useState<HolidayPackage | null>(null);
+
+  const handleOpenDestination = (pkg: HolidayPackage) => {
+    if (onSelectDestination) {
+      onSelectDestination(pkg);
+    } else {
+      setActivePackageModal(pkg);
+    }
+  };
 
   // Category Tabs
   const categories = [
@@ -191,8 +202,12 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
               className="bg-white rounded-2xl shadow-sm border border-slate-200 hover:border-teal-500 hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between group w-full min-w-0"
             >
               <div>
-                {/* Image & Badges */}
-                <div className="h-52 relative overflow-hidden">
+                {/* Image & Badges - Clickable to open full destination page */}
+                <div 
+                  onClick={() => handleOpenDestination(pkg)}
+                  className="h-52 relative overflow-hidden cursor-pointer"
+                  title={`View full details & itinerary for ${pkg.title}`}
+                >
                   <img
                     src={pkg.image}
                     alt={pkg.title}
@@ -215,7 +230,7 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
                   </div>
 
                   {/* Bottom Duration & Rating over image */}
-                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs">
+                  <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between text-white text-xs pointer-events-none">
                     <div className="bg-black/60 backdrop-blur-xs px-2.5 py-1 rounded-lg font-bold flex items-center gap-1.5 border border-white/15">
                       <Clock className="w-3.5 h-3.5 text-teal-400" />
                       <span>{pkg.duration}</span>
@@ -245,7 +260,11 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
                     )}
                   </div>
 
-                  <h3 className="text-base font-black text-slate-900 leading-snug line-clamp-2 mb-1.5 group-hover:text-teal-700 transition-colors">
+                  <h3 
+                    onClick={() => handleOpenDestination(pkg)}
+                    className="text-base font-black text-slate-900 leading-snug line-clamp-2 mb-1.5 group-hover:text-teal-700 transition-colors cursor-pointer"
+                    title={`Click to open full page for ${pkg.title}`}
+                  >
                     {pkg.title}
                   </h3>
 
@@ -326,14 +345,15 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
                     </button>
                   )}
 
+                  {/* Details / Full Page View Button */}
                   <button
                     type="button"
-                    onClick={() => setActivePackageModal(pkg)}
-                    className="p-2 bg-white hover:bg-slate-100 text-slate-700 border border-slate-200 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
-                    title="View Day-by-day Itinerary"
+                    onClick={() => handleOpenDestination(pkg)}
+                    className="px-2.5 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 border border-slate-300 rounded-xl text-xs font-bold transition-all flex items-center gap-1 cursor-pointer"
+                    title={`Open dedicated page for ${pkg.title}`}
                   >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Details</span>
+                    <Eye className="w-3.5 h-3.5 text-teal-600" />
+                    <span>View Page</span>
                   </button>
 
                   <button

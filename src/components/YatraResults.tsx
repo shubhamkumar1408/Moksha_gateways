@@ -19,14 +19,24 @@ import { MOCK_YATRAS } from '../data/mockData';
 interface YatraResultsProps {
   onBookYatra: (yatra: YatraPackage) => void;
   filterCircuit?: string;
+  onSelectDestination?: (yatraId: string) => void;
 }
 
 export const YatraResults: React.FC<YatraResultsProps> = ({
   onBookYatra,
-  filterCircuit
+  filterCircuit,
+  onSelectDestination
 }) => {
   const [selectedCircuit, setSelectedCircuit] = useState<string>(filterCircuit && filterCircuit !== 'All' ? filterCircuit : 'All');
   const [activeItineraryModal, setActiveItineraryModal] = useState<YatraPackage | null>(null);
+
+  const handleOpenYatra = (yatra: YatraPackage) => {
+    if (onSelectDestination) {
+      onSelectDestination(yatra.id);
+    } else {
+      setActiveItineraryModal(yatra);
+    }
+  };
 
   const circuits = ['All', 'Char Dham', 'North Sacred', 'Himalayan', 'South Sacred'];
 
@@ -80,7 +90,11 @@ export const YatraResults: React.FC<YatraResultsProps> = ({
           >
             <div>
               {/* Package Header Image */}
-              <div className="h-64 relative overflow-hidden group">
+              <div 
+                onClick={() => handleOpenYatra(yatra)}
+                className="h-64 relative overflow-hidden group cursor-pointer"
+                title={`View full details & itinerary for ${yatra.title}`}
+              >
                 <img
                   src={yatra.image}
                   alt={yatra.title}
@@ -89,7 +103,7 @@ export const YatraResults: React.FC<YatraResultsProps> = ({
                 <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/20 to-transparent" />
                 
                 {/* Badges */}
-                <div className="absolute top-3 left-3 flex flex-wrap gap-2">
+                <div className="absolute top-3 left-3 flex flex-wrap gap-2 pointer-events-none">
                   {yatra.badge && (
                     <span className="bg-amber-500 text-slate-950 text-xs font-black px-3 py-1 rounded-full shadow-md">
                       {yatra.badge}
@@ -177,11 +191,12 @@ export const YatraResults: React.FC<YatraResultsProps> = ({
               <div className="flex items-center gap-2">
                 <button
                   type="button"
-                  onClick={() => setActiveItineraryModal(yatra)}
+                  onClick={() => handleOpenYatra(yatra)}
                   className="px-3 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl transition-all flex items-center gap-1 cursor-pointer"
+                  title="View complete itinerary & details"
                 >
-                  <Eye className="w-3.5 h-3.5" />
-                  <span>Itinerary</span>
+                  <Eye className="w-3.5 h-3.5 text-amber-600" />
+                  <span>View Details</span>
                 </button>
 
                 <button
