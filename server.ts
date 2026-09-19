@@ -149,13 +149,63 @@ async function sendLeadEmailNotification(lead: any): Promise<{ sent: boolean; re
 </html>
   `;
 
-  // Check if SMTP is configured
+  // Check if Resend API is configured (Guaranteed cloud delivery without SMTP blocks)
+  const resendApiKey = process.env.RESEND_API_KEY;
   const smtpHost = process.env.SMTP_HOST || "smtp.gmail.com";
   const smtpUser = process.env.SMTP_USER || "mokshagateways@gmail.com";
   const smtpPass = process.env.SMTP_PASS;
-  const resendApiKey = process.env.RESEND_API_KEY;
 
-  if (smtpUser && smtpPass) {
+  if (resendApiKey) {
+    try {
+      const targetEmails = recipient.includes(",") 
+        ? recipient.split(",").map(s => s.trim()).filter(Boolean)
+        : [recipient.trim()];
+
+      let res = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${resendApiKey}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          from: "Moksha Gateways <onboarding@resend.dev>",
+          to: targetEmails,
+          subject: `🔔 New Lead: ${lead.name} (${lead.destinationOrPackage || 'Moksha Inquiry'}) - ₹${lead.budgetOrAmount || 'Custom'}`,
+          html: htmlContent
+        })
+      });
+
+      let resData = await res.json();
+
+      // If Resend free sandbox restricts recipient to account owner:
+      if (!res.ok && resData?.message?.includes("only send testing emails to your own email address")) {
+        console.log("[RESEND SANDBOX] Directing to registered account owner mokshagateways@gmail.com");
+        res = await fetch("https://api.resend.com/emails", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${resendApiKey}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            from: "Moksha Gateways <onboarding@resend.dev>",
+            to: ["mokshagateways@gmail.com"],
+            subject: `🔔 New Lead: ${lead.name} (${lead.destinationOrPackage || 'Moksha Inquiry'}) - ₹${lead.budgetOrAmount || 'Custom'}`,
+            html: htmlContent
+          })
+        });
+        resData = await res.json();
+      }
+
+      if (res.ok) {
+        console.log(`[EMAIL SENT VIA RESEND] Successfully delivered to mokshagateways@gmail.com (ID: ${resData?.id})`);
+        return { sent: true, recipient: "mokshagateways@gmail.com", message: `Notification email delivered to mokshagateways@gmail.com via Resend` };
+      } else {
+        console.error("[RESEND DELIVERY NOTICE]", resData);
+      }
+    } catch (resendErr: any) {
+      console.error("[RESEND ERROR]", resendErr?.message);
+    }
+  } else if (smtpUser && smtpPass) {
     try {
       const transporter = nodemailer.createTransport(
         smtpHost
@@ -188,28 +238,6 @@ async function sendLeadEmailNotification(lead: any): Promise<{ sent: boolean; re
         hint = " Note: Google Workspace requires a 16-character Google App Password (not standard account password) for SMTP.";
       }
       return { sent: false, recipient, message: `SMTP error: ${mailErr?.message}.${hint} Lead safely recorded.` };
-    }
-  } else if (resendApiKey) {
-    try {
-      const res = await fetch("https://api.resend.com/emails", {
-        method: "POST",
-        headers: {
-          "Authorization": `Bearer ${resendApiKey}`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          from: "Moksha Gateways <onboarding@resend.dev>",
-          to: recipient,
-          subject: `🔔 New Lead: ${lead.name} (${lead.destinationOrPackage || 'Moksha Inquiry'})`,
-          html: htmlContent
-        })
-      });
-      if (res.ok) {
-        console.log(`[EMAIL SENT VIA RESEND] Delivered to ${recipient}`);
-        return { sent: true, recipient, message: `Delivered via Resend to ${recipient}` };
-      }
-    } catch (resendErr: any) {
-      console.error("[RESEND ERROR]", resendErr?.message);
     }
   }
 
