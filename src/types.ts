@@ -218,3 +218,21 @@ export interface Offer {
   badge: string;
   validTill: string;
 }
+
+export interface LeadData {
+  id?: string;
+  leadType: 'Booking' | 'Inquiry' | 'Callback' | 'Customization' | 'Quick QR' | 'Login';
+  name: string;
+  phone: string;
+  email?: string;
+  serviceType?: ServiceType;
+  destinationOrPackage?: string;
+  duration?: string;
+  travelDate?: string;
+  travelersCount?: number;
+  budgetOrAmount?: number | string;
+  couponCode?: string;
+  notes?: string;
+  sourceUrl?: string;
+  submittedAt?: string;
+}

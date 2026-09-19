@@ -1,0 +1,38 @@
+[
+  {
+    "id": "LEAD-4639-9366",
+    "leadType": "Booking",
+    "name": "Shubham Dutt",
+    "phone": "9334789099",
+    "email": "duttshubham68@gmail.com",
+    "serviceType": "holidays",
+    "destinationOrPackage": "Kedarnath - Badrinath Do Dham Yatra",
+    "duration": "",
+    "travelDate": "",
+    "travelersCount": 1,
+    "budgetOrAmount": 24999,
+    "couponCode": "",
+    "notes": "Testing instant lead notification",
+    "sourceUrl": "",
+    "submittedAt": "2026-09-19T03:21:24.639Z",
+    "status": "New Lead"
+  },
+  {
+    "id": "LEAD-4792-5168",
+    "leadType": "Callback",
+    "name": "Test Customer",
+    "phone": "9876543210",
+    "email": "test@example.com",
+    "serviceType": "holidays",
+    "destinationOrPackage": "Manali 3N/4D Special",
+    "duration": "",
+    "travelDate": "",
+    "travelersCount": 1,
+    "budgetOrAmount": 6999,
+    "couponCode": "",
+    "notes": "Testing lead email flow",
+    "sourceUrl": "",
+    "submittedAt": "2026-09-19T02:30:04.792Z",
+    "status": "New Lead"
+  }
+]

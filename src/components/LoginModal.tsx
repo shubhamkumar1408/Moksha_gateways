@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { X, User, ShieldCheck, Sparkles, CheckCircle2 } from 'lucide-react';
+import { submitLead } from '../utils/leadService';
 
 interface LoginModalProps {
   isOpen: boolean;
@@ -29,6 +30,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const handleVerify = (e: React.FormEvent) => {
     e.preventDefault();
     const finalName = name.trim() || 'Rahul';
+    const isEmail = mobileOrEmail.includes('@');
+    
+    submitLead({
+      leadType: 'Login',
+      name: finalName,
+      phone: !isEmail ? mobileOrEmail.trim() : '',
+      email: isEmail ? mobileOrEmail.trim() : '',
+      destinationOrPackage: 'Moksha User Portal Registration / Login',
+      notes: `User signed in with ${mobileOrEmail.trim()}. Profile name: ${finalName}`,
+    }).catch(err => console.warn('Login lead submit:', err));
+
     onLoginSuccess(finalName);
     onClose();
   };

@@ -13,6 +13,8 @@ import { MyBookingsModal } from './components/MyBookingsModal';
 import { AiPlannerModal } from './components/AiPlannerModal';
 import { LoginModal } from './components/LoginModal';
 import { QuickQrPaymentModal } from './components/QuickQrPaymentModal';
+import { LeadInquiryModal } from './components/LeadInquiryModal';
+import { AdminLeadsModal } from './components/AdminLeadsModal';
 import { Footer } from './components/Footer';
 import { WhatsAppContactBar } from './components/WhatsAppContactBar';
 import { LiveBookingPopup } from './components/LiveBookingPopup';
@@ -34,6 +36,26 @@ export default function App() {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const [isQuickQrOpen, setIsQuickQrOpen] = useState(false);
   const [quickQrTarget, setQuickQrTarget] = useState<{ title?: string; price?: number } | undefined>(undefined);
+  const [isLeadModalOpen, setIsLeadModalOpen] = useState(false);
+  const [isAdminLeadsOpen, setIsAdminLeadsOpen] = useState(false);
+  const [leadModalContext, setLeadModalContext] = useState<{ destination?: string; duration?: string; title?: string }>({});
+
+  const handleOpenLeadModal = (item?: any) => {
+    if (item) {
+      setLeadModalContext({
+        destination: item.location || item.title || item.name || '',
+        duration: item.duration || '',
+        title: item.title || item.name || 'Trip Inquiry',
+      });
+    } else {
+      setLeadModalContext({
+        destination: '',
+        duration: '',
+        title: 'General Website Inquiry',
+      });
+    }
+    setIsLeadModalOpen(true);
+  };
 
   // Dedicated destination page routing (URL sync with ?destination=...)
   const [selectedDestinationId, setSelectedDestinationId] = useState<string | null>(() => {
@@ -272,6 +294,8 @@ export default function App() {
         onOpenBookings={() => setIsBookingsModalOpen(true)}
         onOpenAiPlanner={() => setIsAiPlannerOpen(true)}
         onOpenLoginModal={() => setIsLoginModalOpen(true)}
+        onOpenLeadModal={() => handleOpenLeadModal()}
+        onOpenAdminLeads={() => setIsAdminLeadsOpen(true)}
         userName={userName}
         language={language}
         onToggleLanguage={() => setLanguage(language === 'EN' ? 'HI' : 'EN')}
@@ -288,6 +312,7 @@ export default function App() {
             setIsQuickQrOpen(true);
           }}
           onSelectOtherDestination={handleSelectDestination}
+          onOpenLeadModal={(pkg) => handleOpenLeadModal(pkg)}
           allDestinations={MOCK_HOLIDAYS}
         />
       ) : (
@@ -335,6 +360,7 @@ export default function App() {
                   setIsQuickQrOpen(true);
                 }}
                 onSelectDestination={handleSelectDestination}
+                onOpenLeadModal={(pkg) => handleOpenLeadModal(pkg)}
               />
             )}
 
@@ -410,6 +436,19 @@ export default function App() {
         isOpen={isLoginModalOpen}
         onClose={() => setIsLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
+      />
+
+      <LeadInquiryModal
+        isOpen={isLeadModalOpen}
+        onClose={() => setIsLeadModalOpen(false)}
+        defaultDestination={leadModalContext.destination}
+        defaultDuration={leadModalContext.duration}
+        sourceTitle={leadModalContext.title}
+      />
+
+      <AdminLeadsModal
+        isOpen={isAdminLeadsOpen}
+        onClose={() => setIsAdminLeadsOpen(false)}
       />
     </div>
   );

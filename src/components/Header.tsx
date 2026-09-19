@@ -14,7 +14,8 @@ import {
   Flame,
   Instagram,
   Facebook,
-  QrCode
+  QrCode,
+  ClipboardList
 } from 'lucide-react';
 import { ServiceType } from '../types';
 import { MokshaLogo } from './MokshaLogo';
@@ -26,6 +27,8 @@ interface HeaderProps {
   onOpenBookings: () => void;
   onOpenAiPlanner: () => void;
   onOpenLoginModal: () => void;
+  onOpenLeadModal?: () => void;
+  onOpenAdminLeads?: () => void;
   userName: string | null;
   language: 'EN' | 'HI';
   onToggleLanguage: () => void;
@@ -38,6 +41,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenBookings,
   onOpenAiPlanner,
   onOpenLoginModal,
+  onOpenLeadModal,
+  onOpenAdminLeads,
   userName,
   language,
   onToggleLanguage
@@ -106,6 +111,30 @@ export const Header: React.FC<HeaderProps> = ({
           </button>
 
           <span className="hidden sm:inline text-slate-500 font-semibold">₹ INR</span>
+
+          {onOpenLeadModal && (
+            <button
+              id="header-callback-btn"
+              onClick={onOpenLeadModal}
+              className="flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs transition-colors cursor-pointer"
+              title="Request a Free Callback & Tour Quote"
+            >
+              <PhoneCall className="w-3 h-3 text-[#ff6a00]" />
+              <span className="hidden xs:inline">{language === 'HI' ? 'कॉल अनुरोध' : 'Callback'}</span>
+            </button>
+          )}
+
+          {onOpenAdminLeads && (
+            <button
+              id="header-admin-leads-btn"
+              onClick={onOpenAdminLeads}
+              className="flex items-center gap-1 bg-blue-50 hover:bg-blue-100 text-blue-900 border border-blue-200 font-bold px-2 sm:px-2.5 py-0.5 sm:py-1 rounded-full text-[10px] sm:text-xs transition-colors cursor-pointer"
+              title="View all customer inquiries and leads"
+            >
+              <ClipboardList className="w-3 h-3 text-blue-600" />
+              <span className="hidden xs:inline">{language === 'HI' ? 'लीड्स' : 'Leads'}</span>
+            </button>
+          )}
 
           <button
             id="header-my-trips-btn"

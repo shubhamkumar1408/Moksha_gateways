@@ -20,7 +20,8 @@ import {
   Send,
   AlertCircle,
   Users,
-  Info
+  Info,
+  PhoneCall
 } from 'lucide-react';
 import { HolidayPackage } from '../types';
 
@@ -30,6 +31,7 @@ interface DestinationDetailPageProps {
   onBook: (pkg: HolidayPackage) => void;
   onQuickQrPay: (pkg: HolidayPackage) => void;
   onSelectOtherDestination: (pkgId: string) => void;
+  onOpenLeadModal?: (pkg?: HolidayPackage) => void;
   allDestinations: HolidayPackage[];
 }
 
@@ -39,6 +41,7 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
   onBook,
   onQuickQrPay,
   onSelectOtherDestination,
+  onOpenLeadModal,
   allDestinations
 }) => {
   const [isShareModalOpen, setIsShareModalOpen] = useState(false);
@@ -612,6 +615,17 @@ export const DestinationDetailPage: React.FC<DestinationDetailPageProps> = ({
                   <QrCode className="w-4 h-4 text-[#00baf2]" />
                   <span>⚡ DIRECT PAYTM UPI QR BOOKING</span>
                 </button>
+
+                {onOpenLeadModal && (
+                  <button
+                    type="button"
+                    onClick={() => onOpenLeadModal(packageForAction)}
+                    className="w-full py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs rounded-2xl transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                  >
+                    <PhoneCall className="w-3.5 h-3.5 text-[#ff6a00]" />
+                    <span>Request Free Callback & Custom Quote</span>
+                  </button>
+                )}
 
                 <a
                   href={`https://wa.me/919334789099?text=Namaste%2C%20I%20am%20interested%20in%20booking%20${encodeURIComponent(destination.title)}%20(${encodeURIComponent(currentDuration)}%20-%20Rs.${currentPrice}).%20Please%20guide%20me.`}

@@ -20,6 +20,7 @@ import {
 import { Booking, Passenger, ServiceType } from '../types';
 import { MokshaLogo } from './MokshaLogo';
 import { UpiPaymentCard } from './UpiPaymentCard';
+import { submitLead } from '../utils/leadService';
 
 interface BookingModalProps {
   isOpen: boolean;
@@ -164,6 +165,23 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
     setConfirmedBooking(newBooking);
     onBookingSuccess(newBooking);
+    
+    // Automatically submit lead to server & dispatch email notification
+    submitLead({
+      leadType: 'Booking',
+      name: primaryName || 'Lead Traveler',
+      phone: primaryPhone,
+      email: primaryEmail,
+      serviceType,
+      destinationOrPackage: bookingItem.title || bookingItem.name || bookingItem.airline || 'Moksha Reservation',
+      duration: bookingItem.duration,
+      travelDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+      travelersCount: passengers.length || 1,
+      budgetOrAmount: details.paidAmount,
+      couponCode: discount > 0 ? promoCode.toUpperCase() : undefined,
+      notes: `Booking PNR: ${randomPnr}. Payment via Paytm UPI QR (UTR: ${details.utrNumber})`,
+    }).catch(err => console.warn('Lead dispatch note:', err));
+
     setStep('confirm');
   };
 
@@ -199,6 +217,23 @@ export const BookingModal: React.FC<BookingModalProps> = ({
 
     setConfirmedBooking(newBooking);
     onBookingSuccess(newBooking);
+
+    // Automatically submit lead to server & dispatch email notification
+    submitLead({
+      leadType: 'Booking',
+      name: primaryName || 'Lead Yatri',
+      phone: primaryPhone,
+      email: primaryEmail,
+      serviceType,
+      destinationOrPackage: bookingItem.title || bookingItem.name || bookingItem.airline || 'Moksha Reservation',
+      duration: bookingItem.duration,
+      travelDate: new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+      travelersCount: passengers.length || 1,
+      budgetOrAmount: finalTotal,
+      couponCode: discount > 0 ? promoCode.toUpperCase() : undefined,
+      notes: `Booking PNR: ${randomPnr}. Route: ${bookingItem.location || ''}`,
+    }).catch(err => console.warn('Lead dispatch note:', err));
+
     setStep('confirm');
   };
 

@@ -19,7 +19,8 @@ import {
   QrCode,
   Share2,
   Tag,
-  Copy
+  Copy,
+  PhoneCall
 } from 'lucide-react';
 import { HolidayPackage } from '../types';
 import { MOCK_HOLIDAYS } from '../data/mockData';
@@ -28,12 +29,14 @@ interface HolidaysSectionProps {
   onBookHoliday: (holiday: HolidayPackage) => void;
   onQuickQrPay?: (holiday: HolidayPackage) => void;
   onSelectDestination?: (holiday: HolidayPackage) => void;
+  onOpenLeadModal?: (holiday?: HolidayPackage) => void;
 }
 
 export const HolidaysSection: React.FC<HolidaysSectionProps> = ({ 
   onBookHoliday,
   onQuickQrPay,
-  onSelectDestination
+  onSelectDestination,
+  onOpenLeadModal
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
   const [searchQuery, setSearchQuery] = useState<string>('');
@@ -623,6 +626,21 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
                   <MessageCircle className="w-4 h-4" />
                   <span>WhatsApp (+91 9334789099)</span>
                 </a>
+
+                {onOpenLeadModal && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const toInquire = activePackageModal;
+                      setActivePackageModal(null);
+                      onOpenLeadModal(toInquire);
+                    }}
+                    className="px-3.5 sm:px-4 py-2.5 bg-amber-50 hover:bg-amber-100 text-amber-900 border border-amber-300 font-bold text-xs rounded-xl shadow-xs cursor-pointer transition-all flex items-center gap-1.5"
+                  >
+                    <PhoneCall className="w-4 h-4 text-[#ff6a00]" />
+                    <span>Request Callback</span>
+                  </button>
+                )}
 
                 {onQuickQrPay && (
                   <button

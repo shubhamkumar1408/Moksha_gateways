@@ -16,6 +16,7 @@ import { UpiPaymentCard } from './UpiPaymentCard';
 import { MokshaLogo } from './MokshaLogo';
 import { MOCK_HOLIDAYS, MOCK_YATRAS } from '../data/mockData';
 import { Booking } from '../types';
+import { submitLead } from '../utils/leadService';
 
 interface QuickQrPaymentModalProps {
   isOpen: boolean;
@@ -82,6 +83,21 @@ export const QuickQrPaymentModal: React.FC<QuickQrPaymentModalProps> = ({
       alert('Please enter your full name and mobile number.');
       return;
     }
+
+    // Submit intent lead immediately
+    submitLead({
+      leadType: 'Inquiry',
+      name: name.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
+      destinationOrPackage: currentPkg.title,
+      duration: currentPkg.duration,
+      travelDate: new Date(travelDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+      travelersCount: Number(travelersCount) || 1,
+      budgetOrAmount: currentPkg.price,
+      notes: `Direct UPI Checkout initiated for ${currentPkg.location}.`,
+    }).catch(err => console.warn('Intent lead error:', err));
+
     setStep('pay');
   };
 
@@ -117,6 +133,21 @@ export const QuickQrPaymentModal: React.FC<QuickQrPaymentModalProps> = ({
 
     setConfirmedBooking(newBooking);
     onBookingSuccess(newBooking);
+
+    // Submit confirmed payment lead & trigger email
+    submitLead({
+      leadType: 'Quick QR',
+      name: name.trim(),
+      phone: phone.trim(),
+      email: email.trim(),
+      destinationOrPackage: currentPkg.title,
+      duration: currentPkg.duration,
+      travelDate: new Date(travelDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }),
+      travelersCount: Number(travelersCount) || 1,
+      budgetOrAmount: details.paidAmount || currentPkg.price,
+      notes: `Confirmed UPI QR Booking! PNR: ${randomPnr}. Payment UTR: ${details.utrNumber || 'Direct QR Scan'}.`,
+    }).catch(err => console.warn('QR booking lead error:', err));
+
     setStep('success');
   };
 
