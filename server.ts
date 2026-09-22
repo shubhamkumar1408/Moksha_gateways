@@ -32,6 +32,14 @@ function saveLeadToFile(lead: any): void {
   }
 }
 
+function saveAllLeadsToFile(leads: any[]): void {
+  try {
+    fs.writeFileSync(LEADS_FILE, JSON.stringify(leads.slice(0, 500), null, 2), "utf-8");
+  } catch (err) {
+    console.error("Error saving all leads to file:", err);
+  }
+}
+
 async function sendLeadEmailNotification(lead: any): Promise<{ sent: boolean; recipient: string; message: string }> {
   const recipient = process.env.ADMIN_NOTIFICATION_EMAIL || "duttshubham68@gmail.com, mokshagateways@gmail.com";
   
@@ -340,6 +348,184 @@ async function startServer() {
   app.get("/api/leads", (_req, res) => {
     const leads = getStoredLeads();
     res.json({ success: true, count: leads.length, leads });
+  });
+
+  // Update lead status (e.g. New Lead, Contacted, Pending, Converted, Lost)
+  app.patch("/api/leads/:id/status", (req, res) => {
+    try {
+      const { id } = req.params;
+      const { status } = req.body;
+      if (!status) {
+        return res.status(400).json({ success: false, error: "Status is required" });
+      }
+      const leads = getStoredLeads();
+      const leadIndex = leads.findIndex(l => l.id === id);
+      if (leadIndex === -1) {
+        return res.status(404).json({ success: false, error: "Lead not found" });
+      }
+      leads[leadIndex].status = status;
+      leads[leadIndex].updatedAt = new Date().toISOString();
+      saveAllLeadsToFile(leads);
+      console.log(`[LEAD STATUS UPDATED] Lead ${id} status set to: ${status}`);
+      res.json({ success: true, lead: leads[leadIndex] });
+    } catch (err: any) {
+      console.error("Error updating lead status:", err);
+      res.status(500).json({ success: false, error: err?.message || "Failed to update lead status" });
+    }
+  });
+
+  // OTP Authentication & Lead Capture System
+  interface OtpStoreItem {
+    code: string;
+    name: string;
+    identifier: string;
+    expiresAt: number;
+    leadId: string;
+  }
+  const otpCache = new Map<string, OtpStoreItem>();
+
+  // Send OTP endpoint
+  app.post("/api/auth/send-otp", async (req, res) => {
+    try {
+      const { identifier, name } = req.body;
+      if (!identifier || typeof identifier !== "string" || !identifier.trim()) {
+        return res.status(400).json({ success: false, error: "Mobile number or email is required" });
+      }
+
+      const cleanIdentifier = identifier.trim();
+      const customerName = (name && typeof name === "string" && name.trim()) ? name.trim() : "Customer";
+      const isEmail = cleanIdentifier.includes("@");
+      
+      // Generate 4-digit OTP code
+      const generatedCode = Math.floor(1000 + Math.random() * 9000).toString();
+      const expiresAt = Date.now() + 10 * 60 * 1000; // 10 minutes TTL
+
+      // Create a Lead record immediately so no inquiry is ever lost
+      const randomSuffix = Math.floor(1000 + Math.random() * 9000);
+      const leadId = `LEAD-OTP-${Date.now().toString().slice(-4)}-${randomSuffix}`;
+      
+      const leadRecord = {
+        id: leadId,
+        leadType: "Mobile Login OTP",
+        name: customerName,
+        phone: !isEmail ? cleanIdentifier : "",
+        email: isEmail ? cleanIdentifier : "",
+        serviceType: "holidays",
+        destinationOrPackage: "Portal Login / Account Registration",
+        duration: "",
+        travelDate: "",
+        travelersCount: 1,
+        budgetOrAmount: 0,
+        couponCode: "",
+        notes: `User requested OTP verification code (${generatedCode}) for portal login.`,
+        sourceUrl: "",
+        submittedAt: new Date().toISOString(),
+        status: "New Lead"
+      };
+
+      // Save lead immediately
+      saveLeadToFile(leadRecord);
+
+      // Store in memory
+      otpCache.set(cleanIdentifier.toLowerCase(), {
+        code: generatedCode,
+        name: customerName,
+        identifier: cleanIdentifier,
+        expiresAt,
+        leadId
+      });
+
+      // Dispatch alert to admin email so admin sees this incoming visitor in real-time
+      sendLeadEmailNotification(leadRecord).catch(err => 
+        console.warn("[OTP EMAIL ALERT NOTICE]", err?.message)
+      );
+
+      // Attempt sending SMS if Fast2SMS API key is provided
+      let smsDelivered = false;
+      const fast2smsKey = process.env.FAST2SMS_API_KEY;
+      if (!isEmail && fast2smsKey) {
+        try {
+          const rawDigits = cleanIdentifier.replace(/[^0-9]/g, "");
+          const phone10 = rawDigits.length >= 10 ? rawDigits.slice(-10) : rawDigits;
+          const smsRes = await fetch(`https://www.fast2sms.com/dev/bulkV2?authorization=${fast2smsKey}&route=otp&variables_values=${generatedCode}&flash=0&numbers=${phone10}`);
+          const smsData = await smsRes.json();
+          if (smsData?.return) {
+            smsDelivered = true;
+            console.log(`[FAST2SMS DELIVERED] OTP sent to ${phone10}`);
+          }
+        } catch (smsErr) {
+          console.warn("[FAST2SMS ERROR]", smsErr);
+        }
+      }
+
+      console.log(`[OTP GENERATED] Target: ${cleanIdentifier}, Code: ${generatedCode}, Lead ID: ${leadId}`);
+
+      res.json({
+        success: true,
+        message: smsDelivered 
+          ? `OTP sent to ${cleanIdentifier}` 
+          : `OTP generated for ${cleanIdentifier}`,
+        leadId,
+        devOtp: generatedCode, // Provided so UI can display in demo mode / instant auto-fill
+        smsDelivered
+      });
+    } catch (err: any) {
+      console.error("Error in /api/auth/send-otp:", err);
+      res.status(500).json({ success: false, error: err?.message || "Failed to process OTP request" });
+    }
+  });
+
+  // Verify OTP endpoint
+  app.post("/api/auth/verify-otp", async (req, res) => {
+    try {
+      const { identifier, otp, name } = req.body;
+      if (!identifier || !otp) {
+        return res.status(400).json({ success: false, error: "Identifier and OTP are required" });
+      }
+
+      const cleanIdentifier = identifier.trim().toLowerCase();
+      const enteredOtp = otp.trim();
+      const cached = otpCache.get(cleanIdentifier);
+
+      // Accept matching cached code OR universal fallback demo code 1234
+      const isValid = (cached && cached.code === enteredOtp && Date.now() < cached.expiresAt) || 
+                      (enteredOtp === "1234") ||
+                      (cached && enteredOtp === cached.code);
+
+      if (!isValid) {
+        return res.status(400).json({ success: false, error: "Invalid OTP code. Please check and try again." });
+      }
+
+      const customerName = (name && name.trim()) || cached?.name || "Pilgrim Guest";
+
+      // Update the lead status to Contacted / Verified
+      if (cached?.leadId) {
+        const leads = getStoredLeads();
+        const index = leads.findIndex(l => l.id === cached.leadId);
+        if (index !== -1) {
+          leads[index].status = "Contacted";
+          leads[index].name = customerName;
+          leads[index].notes = `Customer successfully verified OTP and accessed user dashboard. Phone: ${identifier}`;
+          leads[index].updatedAt = new Date().toISOString();
+          saveAllLeadsToFile(leads);
+        }
+      }
+
+      console.log(`[OTP VERIFIED] Customer: ${customerName} (${identifier}) logged in successfully`);
+
+      res.json({
+        success: true,
+        message: "OTP successfully verified!",
+        user: {
+          name: customerName,
+          identifier: cleanIdentifier,
+          verifiedAt: new Date().toISOString()
+        }
+      });
+    } catch (err: any) {
+      console.error("Error in /api/auth/verify-otp:", err);
+      res.status(500).json({ success: false, error: err?.message || "Failed to verify OTP" });
+    }
   });
 
   // Check email service status

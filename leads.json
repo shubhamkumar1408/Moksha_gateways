@@ -1,5 +1,24 @@
 [
   {
+    "id": "LEAD-OTP-7323-6606",
+    "leadType": "Mobile Login OTP",
+    "name": "Vikas Tiwari",
+    "phone": "9876543210",
+    "email": "",
+    "serviceType": "holidays",
+    "destinationOrPackage": "Portal Login / Account Registration",
+    "duration": "",
+    "travelDate": "",
+    "travelersCount": 1,
+    "budgetOrAmount": 0,
+    "couponCode": "",
+    "notes": "Customer successfully verified OTP and accessed user dashboard. Phone: 9876543210",
+    "sourceUrl": "",
+    "submittedAt": "2026-09-22T13:07:27.323Z",
+    "status": "Contacted",
+    "updatedAt": "2026-09-22T13:07:33.695Z"
+  },
+  {
     "id": "LEAD-7514-5512",
     "leadType": "Quick QR",
     "name": "Pooja Verma",
@@ -33,7 +52,8 @@
     "notes": "Interested in family tour next month",
     "sourceUrl": "",
     "submittedAt": "2026-09-19T03:37:34.944Z",
-    "status": "New Lead"
+    "status": "Contacted",
+    "updatedAt": "2026-09-22T12:35:45.017Z"
   },
   {
     "id": "LEAD-4639-9366",
