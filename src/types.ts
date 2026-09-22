@@ -221,7 +221,7 @@ export interface Offer {
 
 export interface LeadData {
   id?: string;
-  leadType: 'Booking' | 'Inquiry' | 'Callback' | 'Customization' | 'Quick QR' | 'Login';
+  leadType: 'Booking' | 'Inquiry' | 'Callback' | 'Customization' | 'Quick QR' | 'Login' | 'Customer Registration';
   name: string;
   phone: string;
   email?: string;
