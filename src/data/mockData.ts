@@ -840,7 +840,69 @@ export const MOCK_HOLIDAYS: HolidayPackage[] = [
     ]
   },
 
-  // 5. Jibhi Sojha (2N/3D, Price 7000)
+  // 5. Rasol Village & High Alpine Trek (2N/3D, Price 5500)
+  {
+    id: 'hol-rasol',
+    title: 'Rasol Village & Mystical Parvati Valley Trek (2N / 3D)',
+    destination: 'Kasol Base • Chalal Riverside Walk • Rasol 8km Mountain Trek (10,000 ft) • Jamlu Rishi Village • Magic Valley Views',
+    location: 'Rasol Village (10,000 ft), Parvati Valley, Kullu District, Himachal Pradesh, India',
+    region: 'Himachal Pradesh • Parvati Valley',
+    reasonToVisit: 'An ancient, mystical Himalayan village perched at 10,000 ft untouched by modern roads. Experience the exhilarating 8 km guided mountain trek through pine forests and mountain streams, sweeping 360-degree views of snow-clad Sar Pass peaks, traditional wooden Kath-Kuni homestays, acoustic bonfires, and starry Milky Way nights.',
+    duration: '2 Nights / 3 Days',
+    nights: 2,
+    days: 3,
+    rating: 4.94,
+    reviewsCount: 780,
+    price: 5500,
+    originalPrice: 7500,
+    image: './destinations/rasol.jpg',
+    theme: 'Alpine Village & Forest Trek',
+    category: 'himachal',
+    isInternational: false,
+    badge: 'Secret Trek 2N/3D ₹5,500',
+    tags: ['Rasol 10,000ft Trek', 'Kasol & Chalal Trails', '8km Guided Trek', 'Traditional Kath-Kuni Stay', 'Bonfire & Stargazing', 'Sar Pass Views'],
+    highlights: [
+      'Complete 2 Nights / 3 Days authentic Himalayan village expedition & high alpine trek at flat ₹5,500',
+      'Guided 8 km scenic trek through dense deodar forests, suspension bridges & gushing streams up to 10,000 ft',
+      '1 Night riverside camping in Kasol/Chalal + 1 Night authentic wooden homestay / alpine tent in Rasol village',
+      'Panoramic 360-degree views of the Great Himalayan Range, snow-capped Sar Pass and Malana peaks',
+      'Explore ancient Kath-Kuni architecture, traditional handloom weaving and unique local Himachali culture',
+      'Warm Himachali meals, certified mountain trek leader, safety gear, and evening acoustic bonfire'
+    ],
+    inclusions: [
+      '1 Night stay in Kasol/Chalal Riverside Camp + 1 Night in Rasol Village Homestay/Tent',
+      'All Fresh Mountain Meals: 2 Breakfasts, 1 Packed Trek Lunch, 2 Hot Vegetarian Dinners',
+      'Certified Mountain Trek Leader & Guide for Kasol-Rasol-Kasol route',
+      'Trek equipment support (Trekking poles, sleeping bags, first-aid medical kit & oximeter)',
+      'Forest entry permits & local environmental fees',
+      'Evening acoustic bonfire with music and stargazing'
+    ],
+    itinerary: [
+      {
+        day: 1,
+        title: 'Arrival in Kasol, Parvati River Walk & Acclimatization Hike to Chalal',
+        description: 'Arrive in Kasol in the morning. Check in to comfortable riverside alpine camp along the turquoise Parvati River. Meet your certified mountain trek leader for an orientation and trek briefing. In the afternoon, enjoy an easy 2 km acclimatization walk across the cable suspension bridge into peaceful Chalal village under towering deodar canopies. Savor local herbal chai at cozy riverside cafes, listen to the roaring river, and return to camp for an evening acoustic bonfire and hot dinner.',
+        stay: 'Kasol / Chalal Riverside Alpine Camp',
+        meals: 'Dinner & Evening Tea'
+      },
+      {
+        day: 2,
+        title: 'The Great Rasol Trek (Kasol / Chalal to Rasol Village - 8 km Ascent to 10,000 ft)',
+        description: 'Begin the day with an early hearty mountain breakfast. Strap on your daypacks and embark on the guided 8 km trek to Rasol. The trail climbs steadily through thick pine and rhododendron woods, crossing bubbling freshwater brooks and wooden logs. Stop at scenic mid-way rock ledges for your packed lunch while taking in breathtaking panoramic views of the entire Parvati Valley and snow-draped Sar Pass range. After 4-5 hours of steady ascent, arrive at the secluded mountain haven of Rasol Village (~10,000 ft). Check into your traditional wooden Kath-Kuni homestay or high alpine tent. Witness an unforgettable golden sunset over the Himalayan peaks, followed by an evening campfire and warm Pahari dinner under millions of twinkling stars.',
+        stay: 'Rasol Traditional Wooden Homestay / High Alpine Tent',
+        meals: 'Breakfast, Packed Trek Lunch & Dinner'
+      },
+      {
+        day: 3,
+        title: 'Himalayan Sunrise, Rasol Village Exploration & Trek Descent to Kasol',
+        description: 'Wake up early to the golden rays illuminating snow-crested mountain peaks. Take a guided morning cultural walk through the quiet cobblestone alleys of Rasol village, admiring century-old slate-roof wooden houses, local handloom wool weavers, and the sacred Jamlu Rishi temple. Enjoy a warm breakfast with fresh mountain air, pack up, and begin the scenic descent trek back down through the pine trails to Chalal and Kasol base (approx. 3 hours). Reach Kasol by 1:30 PM with great trekking memories and onward journey transfer.',
+        stay: 'Departure',
+        meals: 'Breakfast'
+      }
+    ]
+  },
+
+  // 6. Jibhi Sojha (2N/3D, Price 7000)
   {
     id: 'hol-jibhi-sojha',
     title: 'Jibhi & Sojha Tirthan Valley Offbeat Retreat',

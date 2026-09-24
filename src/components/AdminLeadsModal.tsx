@@ -23,7 +23,10 @@ import {
   Users,
   Activity,
   CalendarDays,
-  Layers
+  Layers,
+  Table,
+  LayoutGrid,
+  CheckCircle2
 } from 'lucide-react';
 import { 
   ResponsiveContainer, 
@@ -92,6 +95,7 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
   // Dashboard visibility & view mode
   const [showDashboard, setShowDashboard] = useState<boolean>(true);
   const [chartViewMode, setChartViewMode] = useState<ChartViewMode>('all');
+  const [viewLayout, setViewLayout] = useState<'table' | 'cards'>('table');
 
   // Filters state
   const [searchQuery, setSearchQuery] = useState('');
@@ -773,65 +777,136 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
             </div>
           )}
 
-          {/* Quick Filter Status Tabs */}
+          {/* Quick Filter Status Tabs & Table/Card View Switcher */}
           <div className="bg-slate-50 border-b border-slate-200 px-4 py-2.5 flex flex-wrap items-center justify-between gap-3 text-xs shrink-0">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
+              <span className="text-[11px] font-bold text-slate-400 uppercase tracking-wider hidden md:inline mr-1">
+                Filter:
+              </span>
               <button
                 onClick={() => setSelectedStatus('all')}
                 className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer ${
                   selectedStatus === 'all'
-                    ? 'bg-[#0B2545] text-white shadow-sm'
+                    ? 'bg-[#0B2545] text-white shadow-sm ring-2 ring-[#0B2545]/20'
                     : 'bg-white text-slate-700 hover:bg-slate-200 border border-slate-200'
                 }`}
               >
-                All Leads ({leads.length})
-              </button>
-              <button
-                onClick={() => setSelectedStatus('New Lead')}
-                className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer ${
-                  selectedStatus === 'New Lead'
-                    ? 'bg-blue-600 text-white shadow-sm'
-                    : 'bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200'
-                }`}
-              >
-                New ({statusCounts['New Lead'] || 0})
+                All ({leads.length})
               </button>
               <button
                 onClick={() => setSelectedStatus('Pending')}
-                className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer flex items-center gap-1 ${
                   selectedStatus === 'Pending'
-                    ? 'bg-amber-600 text-white shadow-sm'
-                    : 'bg-amber-50 text-amber-800 hover:bg-amber-100 border border-amber-200'
+                    ? 'bg-amber-600 text-white shadow-sm ring-2 ring-amber-600/30'
+                    : 'bg-amber-50 text-amber-900 hover:bg-amber-100 border border-amber-200'
                 }`}
+                title="Filter Pending Leads"
               >
-                Pending ({statusCounts['Pending'] || 0})
+                <span>⏳ Pending</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                  selectedStatus === 'Pending' ? 'bg-white/20 text-white' : 'bg-amber-200 text-amber-900'
+                }`}>
+                  {statusCounts['Pending'] || 0}
+                </span>
               </button>
               <button
                 onClick={() => setSelectedStatus('Contacted')}
-                className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer flex items-center gap-1 ${
                   selectedStatus === 'Contacted'
-                    ? 'bg-emerald-600 text-white shadow-sm'
-                    : 'bg-emerald-50 text-emerald-800 hover:bg-emerald-100 border border-emerald-200'
+                    ? 'bg-emerald-600 text-white shadow-sm ring-2 ring-emerald-600/30'
+                    : 'bg-emerald-50 text-emerald-900 hover:bg-emerald-100 border border-emerald-200'
                 }`}
+                title="Filter Contacted Leads"
               >
-                Contacted ({statusCounts['Contacted'] || 0})
+                <span>📞 Contacted</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                  selectedStatus === 'Contacted' ? 'bg-white/20 text-white' : 'bg-emerald-200 text-emerald-900'
+                }`}>
+                  {statusCounts['Contacted'] || 0}
+                </span>
               </button>
               <button
                 onClick={() => setSelectedStatus('Converted')}
-                className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer ${
+                className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer flex items-center gap-1 ${
                   selectedStatus === 'Converted'
-                    ? 'bg-purple-600 text-white shadow-sm'
-                    : 'bg-purple-50 text-purple-800 hover:bg-purple-100 border border-purple-200'
+                    ? 'bg-purple-600 text-white shadow-sm ring-2 ring-purple-600/30'
+                    : 'bg-purple-50 text-purple-900 hover:bg-purple-100 border border-purple-200'
                 }`}
+                title="Filter Converted Leads"
               >
-                Converted ({statusCounts['Converted'] || 0})
+                <span>🎉 Converted</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                  selectedStatus === 'Converted' ? 'bg-white/20 text-white' : 'bg-purple-200 text-purple-900'
+                }`}>
+                  {statusCounts['Converted'] || 0}
+                </span>
+              </button>
+              <button
+                onClick={() => setSelectedStatus('New Lead')}
+                className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                  selectedStatus === 'New Lead'
+                    ? 'bg-blue-600 text-white shadow-sm ring-2 ring-blue-600/30'
+                    : 'bg-blue-50 text-blue-900 hover:bg-blue-100 border border-blue-200'
+                }`}
+                title="Filter New Leads"
+              >
+                <span>✨ New</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                  selectedStatus === 'New Lead' ? 'bg-white/20 text-white' : 'bg-blue-200 text-blue-900'
+                }`}>
+                  {statusCounts['New Lead'] || 0}
+                </span>
+              </button>
+              <button
+                onClick={() => setSelectedStatus('Lost')}
+                className={`px-2.5 py-1 rounded-md font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                  selectedStatus === 'Lost'
+                    ? 'bg-slate-700 text-white shadow-sm ring-2 ring-slate-700/30'
+                    : 'bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200'
+                }`}
+                title="Filter Lost / Closed Leads"
+              >
+                <span>✕ Lost</span>
+                <span className={`text-[10px] px-1.5 py-0.2 rounded-full font-black ${
+                  selectedStatus === 'Lost' ? 'bg-white/20 text-white' : 'bg-slate-200 text-slate-800'
+                }`}>
+                  {statusCounts['Lost'] || 0}
+                </span>
               </button>
             </div>
 
-            <div className="flex items-center gap-3 text-slate-600 font-medium">
-              <span className="text-slate-500 text-[11px]">
-                Showing: <strong className="text-slate-900">{filteredAndSortedLeads.length}</strong> items
+            <div className="flex items-center gap-3">
+              <span className="text-slate-500 text-[11px] hidden sm:inline">
+                Showing: <strong className="text-slate-900">{filteredAndSortedLeads.length}</strong> of {leads.length}
               </span>
+
+              {/* Table / Cards View Switcher */}
+              <div className="flex items-center gap-0.5 bg-slate-200/80 p-0.5 rounded-lg border border-slate-300">
+                <button
+                  onClick={() => setViewLayout('table')}
+                  className={`px-2.5 py-1 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    viewLayout === 'table' 
+                      ? 'bg-white text-[#0B2545] shadow-xs' 
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                  title="Switch to Data Table View"
+                >
+                  <Table className="w-3.5 h-3.5" />
+                  <span>Table</span>
+                </button>
+                <button
+                  onClick={() => setViewLayout('cards')}
+                  className={`px-2.5 py-1 rounded-md text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
+                    viewLayout === 'cards' 
+                      ? 'bg-white text-[#0B2545] shadow-xs' 
+                      : 'text-slate-600 hover:text-slate-900'
+                  }`}
+                  title="Switch to Cards View"
+                >
+                  <LayoutGrid className="w-3.5 h-3.5" />
+                  <span>Cards</span>
+                </button>
+              </div>
             </div>
           </div>
 
@@ -840,7 +915,7 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-12 gap-2.5 items-center">
               
               {/* Search Input */}
-              <div className="lg:col-span-4 relative">
+              <div className="lg:col-span-3 relative">
                 <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
@@ -859,8 +934,27 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
                 )}
               </div>
 
-              {/* Destination / Package Filter */}
+              {/* Status Filter Dropdown */}
               <div className="lg:col-span-3">
+                <div className="relative">
+                  <select
+                    value={selectedStatus}
+                    onChange={(e) => setSelectedStatus(e.target.value)}
+                    className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:ring-2 focus:ring-[#ff6a00] focus:bg-white text-slate-700 appearance-none font-semibold truncate"
+                  >
+                    <option value="all">⚡ All Statuses ({leads.length})</option>
+                    <option value="Pending">⏳ Pending ({statusCounts['Pending'] || 0})</option>
+                    <option value="Contacted">📞 Contacted ({statusCounts['Contacted'] || 0})</option>
+                    <option value="Converted">🎉 Converted ({statusCounts['Converted'] || 0})</option>
+                    <option value="New Lead">✨ New Lead ({statusCounts['New Lead'] || 0})</option>
+                    <option value="Lost">✕ Lost / Closed ({statusCounts['Lost'] || 0})</option>
+                  </select>
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                </div>
+              </div>
+
+              {/* Destination / Package Filter */}
+              <div className="lg:col-span-2">
                 <div className="relative">
                   <select
                     value={selectedDestination}
@@ -898,20 +992,20 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
               </div>
 
               {/* Sort Dropdown & Toggle */}
-              <div className="lg:col-span-3 flex items-center gap-1.5">
+              <div className="lg:col-span-2 flex items-center gap-1.5">
                 <div className="relative flex-1">
                   <select
                     value={sortField}
                     onChange={(e) => handleSortChange(e.target.value as SortField)}
-                    className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-2.5 py-1.5 pr-7 focus:outline-none focus:ring-2 focus:ring-[#ff6a00] focus:bg-white text-slate-700 appearance-none font-medium"
+                    className="w-full text-xs bg-slate-50 border border-slate-300 rounded-lg px-2 py-1.5 pr-6 focus:outline-none focus:ring-2 focus:ring-[#ff6a00] focus:bg-white text-slate-700 appearance-none font-medium truncate"
                   >
-                    <option value="date">Sort: Date Submitted</option>
-                    <option value="destination">Sort: Destination</option>
-                    <option value="status">Sort: Status Priority</option>
-                    <option value="amount">Sort: Budget / Amount</option>
-                    <option value="name">Sort: Customer Name</option>
+                    <option value="date">Date</option>
+                    <option value="status">Status</option>
+                    <option value="destination">Dest</option>
+                    <option value="amount">Amount</option>
+                    <option value="name">Name</option>
                   </select>
-                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+                  <ChevronDown className="w-3.5 h-3.5 text-slate-400 absolute right-1.5 top-1/2 -translate-y-1/2 pointer-events-none" />
                 </div>
 
                 <button
@@ -940,13 +1034,13 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
                     </span>
                   )}
                   {selectedStatus !== 'all' && (
-                    <span className="bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full border border-blue-200 flex items-center gap-1">
-                      Status: {selectedStatus}
-                      <button onClick={() => setSelectedStatus('all')} className="hover:text-red-500">×</button>
+                    <span className="bg-amber-50 text-amber-900 px-2.5 py-0.5 rounded-full border border-amber-200 flex items-center gap-1 font-bold">
+                      <span>Status: <strong>{selectedStatus}</strong></span>
+                      <button onClick={() => setSelectedStatus('all')} className="hover:text-red-600 font-black text-sm ml-0.5">×</button>
                     </span>
                   )}
                   {selectedDestination !== 'all' && (
-                    <span className="bg-amber-50 text-amber-800 px-2 py-0.5 rounded-full border border-amber-200 flex items-center gap-1">
+                    <span className="bg-blue-50 text-blue-800 px-2 py-0.5 rounded-full border border-blue-200 flex items-center gap-1">
                       Dest: {selectedDestination}
                       <button onClick={() => setSelectedDestination('all')} className="hover:text-red-500">×</button>
                     </span>
@@ -969,7 +1063,7 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
             )}
           </div>
 
-          {/* Leads List Cards */}
+          {/* Leads Container (Table or Cards) */}
           <div className="p-3 sm:p-4 space-y-3">
             {isLoading && leads.length === 0 ? (
               <div className="p-12 text-center text-slate-500">
@@ -980,11 +1074,11 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
               <div className="p-12 text-center text-slate-500 bg-white rounded-xl border border-dashed border-slate-300">
                 <Filter className="w-8 h-8 mx-auto text-slate-300 mb-2" />
                 <p className="font-bold text-base text-slate-700 mb-1">
-                  {hasActiveFilters ? 'No leads match the selected filters' : 'No leads recorded yet'}
+                  {hasActiveFilters ? `No leads found with status "${selectedStatus !== 'all' ? selectedStatus : 'selected filters'}"` : 'No leads recorded yet'}
                 </p>
                 <p className="text-xs text-slate-500 max-w-sm mx-auto mb-3">
                   {hasActiveFilters 
-                    ? 'Try changing the status, destination, or search query to see other leads.'
+                    ? 'Try switching the status filter above (e.g. Pending, Contacted, Converted) or clear search filters to view other leads.'
                     : 'Whenever a user submits an inquiry or booking on the website, their lead will appear here automatically.'}
                 </p>
                 {hasActiveFilters && (
@@ -996,7 +1090,238 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
                   </button>
                 )}
               </div>
+            ) : viewLayout === 'table' ? (
+              /* TABULAR PIPELINE TABLE VIEW */
+              <div className="overflow-x-auto bg-white rounded-xl border border-slate-200 shadow-xs">
+                <table className="w-full text-left border-collapse text-xs min-w-[840px]">
+                  <thead className="bg-slate-50 border-b border-slate-200 text-slate-600 font-bold text-[11px] uppercase tracking-wider sticky top-0 z-10">
+                    <tr>
+                      <th 
+                        onClick={() => handleSortChange('date')} 
+                        className="py-2.5 px-3 cursor-pointer hover:bg-slate-100 transition-colors"
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>Date & Type</span>
+                          {sortField === 'date' && (
+                            <span className="text-[#ff6a00]">{sortDirection === 'desc' ? '▼' : '▲'}</span>
+                          )}
+                        </div>
+                      </th>
+                      <th 
+                        onClick={() => handleSortChange('name')} 
+                        className="py-2.5 px-3 cursor-pointer hover:bg-slate-100 transition-colors"
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>Customer Name</span>
+                          {sortField === 'name' && (
+                            <span className="text-[#ff6a00]">{sortDirection === 'desc' ? '▼' : '▲'}</span>
+                          )}
+                        </div>
+                      </th>
+                      <th className="py-2.5 px-3">
+                        <span>Phone / Email</span>
+                      </th>
+                      <th 
+                        onClick={() => handleSortChange('destination')} 
+                        className="py-2.5 px-3 cursor-pointer hover:bg-slate-100 transition-colors"
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>Destination / Tour</span>
+                          {sortField === 'destination' && (
+                            <span className="text-[#ff6a00]">{sortDirection === 'desc' ? '▼' : '▲'}</span>
+                          )}
+                        </div>
+                      </th>
+                      <th 
+                        onClick={() => handleSortChange('amount')} 
+                        className="py-2.5 px-3 cursor-pointer hover:bg-slate-100 transition-colors"
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>Amount</span>
+                          {sortField === 'amount' && (
+                            <span className="text-[#ff6a00]">{sortDirection === 'desc' ? '▼' : '▲'}</span>
+                          )}
+                        </div>
+                      </th>
+                      <th 
+                        onClick={() => handleSortChange('status')} 
+                        className="py-2.5 px-3 cursor-pointer hover:bg-slate-100 transition-colors"
+                      >
+                        <div className="flex items-center gap-1">
+                          <span>Pipeline Status</span>
+                          {sortField === 'status' && (
+                            <span className="text-[#ff6a00]">{sortDirection === 'desc' ? '▼' : '▲'}</span>
+                          )}
+                        </div>
+                      </th>
+                      <th className="py-2.5 px-3 text-right">
+                        <span>Actions</span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100">
+                    {filteredAndSortedLeads.map((lead, idx) => {
+                      const cleanPhone = (lead.phone || '').replace(/[^0-9]/g, '');
+                      const waPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
+                      const waUrl = `https://wa.me/${waPhone}?text=${encodeURIComponent(`Namaste ${lead.name || 'Customer'}, thank you for contacting Moksha Gateways regarding ${lead.destinationOrPackage || 'your tour'}!`)}`;
+                      const currentStatus = lead.status || 'New Lead';
+                      const isUpdatingThis = updatingLeadId === lead.id;
+
+                      return (
+                        <tr 
+                          key={lead.id} 
+                          className={`hover:bg-amber-50/40 transition-colors ${idx % 2 === 0 ? 'bg-white' : 'bg-slate-50/50'}`}
+                        >
+                          {/* Date & Type */}
+                          <td className="py-2.5 px-3 align-top whitespace-nowrap">
+                            <div className="flex flex-col gap-0.5">
+                              <span className="font-semibold text-slate-800 text-[11px]">
+                                {new Date(lead.submittedAt).toLocaleString('en-IN', {
+                                  day: 'numeric',
+                                  month: 'short',
+                                  hour: '2-digit',
+                                  minute: '2-digit'
+                                })}
+                              </span>
+                              <div className="flex items-center gap-1.5 mt-0.5">
+                                <span className="font-mono text-[10px] text-slate-500 bg-slate-100 px-1.5 py-0.2 rounded border border-slate-200">
+                                  {lead.id}
+                                </span>
+                                <span className={`text-[10px] font-bold px-1.5 py-0.2 rounded-full ${
+                                  lead.leadType === 'Quick QR' 
+                                    ? 'bg-purple-100 text-purple-700 border border-purple-200' 
+                                    : lead.leadType === 'Booking'
+                                    ? 'bg-emerald-100 text-emerald-700 border border-emerald-200'
+                                    : 'bg-amber-100 text-amber-700 border border-amber-200'
+                                }`}>
+                                  {lead.leadType || 'Inquiry'}
+                                </span>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Customer Name */}
+                          <td className="py-2.5 px-3 align-top">
+                            <div className="font-bold text-slate-900 leading-tight">
+                              {lead.name || 'Anonymous Visitor'}
+                            </div>
+                            {lead.travelersCount && lead.travelersCount > 1 && (
+                              <span className="text-[10px] text-slate-500 block mt-0.5 font-medium">
+                                👥 {lead.travelersCount} Travelers
+                              </span>
+                            )}
+                            {lead.notes && (
+                              <p className="text-[11px] text-slate-500 italic mt-0.5 max-w-[200px] truncate" title={lead.notes}>
+                                "{lead.notes}"
+                              </p>
+                            )}
+                          </td>
+
+                          {/* Phone & Contact */}
+                          <td className="py-2.5 px-3 align-top whitespace-nowrap">
+                            <div className="font-bold text-slate-800">
+                              📞 {lead.phone || 'No phone'}
+                            </div>
+                            {lead.email && (
+                              <div className="text-[11px] text-slate-500 truncate max-w-[160px]" title={lead.email}>
+                                ✉️ {lead.email}
+                              </div>
+                            )}
+                          </td>
+
+                          {/* Destination */}
+                          <td className="py-2.5 px-3 align-top">
+                            <div className="font-bold text-[#ff6a00] flex items-center gap-1">
+                              <MapPin className="w-3 h-3 text-[#ff6a00] shrink-0" />
+                              <span className="truncate max-w-[170px]" title={lead.destinationOrPackage}>
+                                {lead.destinationOrPackage || 'Custom Inquiry'}
+                              </span>
+                            </div>
+                            {lead.travelDate && (
+                              <span className="text-[10px] text-slate-500 block mt-0.5">
+                                🗓️ {lead.travelDate}
+                              </span>
+                            )}
+                          </td>
+
+                          {/* Amount */}
+                          <td className="py-2.5 px-3 align-top whitespace-nowrap">
+                            {lead.budgetOrAmount ? (
+                              <span className="font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-100 inline-flex items-center gap-0.5">
+                                <IndianRupee className="w-3 h-3" />
+                                {lead.budgetOrAmount.toLocaleString('en-IN')}
+                              </span>
+                            ) : (
+                              <span className="text-slate-400 font-medium text-[11px]">-</span>
+                            )}
+                          </td>
+
+                          {/* Pipeline Status Selector */}
+                          <td className="py-2.5 px-3 align-top whitespace-nowrap">
+                            <div className="relative inline-flex items-center">
+                              <select
+                                value={currentStatus}
+                                disabled={isUpdatingThis}
+                                onChange={(e) => handleUpdateStatus(lead.id, e.target.value)}
+                                className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border appearance-none pr-5 cursor-pointer focus:outline-none transition-colors shadow-2xs ${
+                                  currentStatus === 'New Lead' 
+                                    ? 'bg-blue-100 text-blue-800 border-blue-300 hover:bg-blue-200'
+                                    : currentStatus === 'Pending'
+                                    ? 'bg-amber-100 text-amber-800 border-amber-300 hover:bg-amber-200'
+                                    : currentStatus === 'Contacted'
+                                    ? 'bg-emerald-100 text-emerald-800 border-emerald-300 hover:bg-emerald-200'
+                                    : currentStatus === 'Converted'
+                                    ? 'bg-purple-100 text-purple-800 border-purple-300 hover:bg-purple-200'
+                                    : 'bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200'
+                                }`}
+                                title="Click to update lead status"
+                              >
+                                {STATUS_OPTIONS.map(opt => (
+                                  <option key={opt.value} value={opt.value}>
+                                    {opt.label}
+                                  </option>
+                                ))}
+                              </select>
+                              <ChevronDown className="w-3 h-3 text-slate-500 absolute right-1.5 pointer-events-none" />
+                              {isUpdatingThis && (
+                                <RefreshCw className="w-3 h-3 animate-spin text-slate-500 ml-1.5" />
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Actions */}
+                          <td className="py-2.5 px-3 align-top text-right whitespace-nowrap">
+                            <div className="flex items-center justify-end gap-1.5">
+                              {lead.phone && (
+                                <a
+                                  href={`tel:${lead.phone}`}
+                                  className="p-1.5 bg-[#0B2545] hover:bg-[#133E70] text-white rounded-lg transition-colors shadow-2xs"
+                                  title={`Call ${lead.name || 'Customer'}`}
+                                >
+                                  <Phone className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                              {lead.phone && (
+                                <a
+                                  href={waUrl}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="p-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition-colors shadow-2xs"
+                                  title={`Send WhatsApp to ${lead.name || 'Customer'}`}
+                                >
+                                  <MessageSquare className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
             ) : (
+              /* CARD VIEW */
               filteredAndSortedLeads.map((lead) => {
                 const cleanPhone = (lead.phone || '').replace(/[^0-9]/g, '');
                 const waPhone = cleanPhone.length === 10 ? `91${cleanPhone}` : cleanPhone;
@@ -1034,7 +1359,7 @@ export const AdminLeadsModal: React.FC<AdminLeadsModalProps> = ({ isOpen, onClos
                             value={currentStatus}
                             disabled={isUpdatingThis}
                             onChange={(e) => handleUpdateStatus(lead.id, e.target.value)}
-                            className={`text-[11px] font-bold px-2 py-0.5 rounded-full border appearance-none pr-5 cursor-pointer focus:outline-none transition-colors ${
+                            className={`text-[11px] font-bold px-2.5 py-0.5 rounded-full border appearance-none pr-5 cursor-pointer focus:outline-none transition-colors ${
                               currentStatus === 'New Lead' 
                                 ? 'bg-blue-100 text-blue-800 border-blue-300 hover:bg-blue-200'
                                 : currentStatus === 'Pending'

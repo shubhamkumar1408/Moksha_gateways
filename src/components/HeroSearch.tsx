@@ -789,6 +789,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                       <option value="Rajasthan Grand">Royal Rajasthan Grand Circuit (7N/8D • ₹28,500)</option>
                     </optgroup>
                     <optgroup label="Himachal Pradesh">
+                      <option value="Rasol">Rasol Village & Parvati Trek (2N/3D • ₹5,500)</option>
                       <option value="Spiti">Spiti Valley (6N/7D • ₹20,000)</option>
                       <option value="Manali Kasol">Manali Kasol (3N/4D • ₹7,000)</option>
                       <option value="Jibhi Sojha">Jibhi Sojha (2N/3D • ₹7,000)</option>
@@ -826,7 +827,7 @@ export const HeroSearch: React.FC<HeroSearchProps> = ({
                     className="text-lg font-extrabold text-slate-900 bg-transparent border-none focus:outline-hidden p-0 cursor-pointer"
                   >
                     <option value="Any">Flexible / All Durations</option>
-                    <option value="Weekend">2N/3D Weekend Escapes (Jibhi, Chopta, Mcleodganj)</option>
+                    <option value="Weekend">2N/3D Weekend Escapes (Rasol Trek, Jibhi, Chopta, Mcleodganj)</option>
                     <option value="Medium">3N/4D - 5N/6D Mountain Treks (Manali, VOF, Hampta)</option>
                     <option value="Long">6N/7D - 10N/11D Grand Expeditions (Spiti, Ladakh, Char Dham)</option>
                   </select>

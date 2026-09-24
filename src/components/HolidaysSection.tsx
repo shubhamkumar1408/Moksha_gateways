@@ -141,7 +141,7 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
             Himalayan Treks, Royal Rajasthan & International Getaways
           </h2>
           <p className="mt-2 text-xs sm:text-sm text-slate-300 leading-relaxed max-w-2xl">
-            Explore Royal Rajasthan palaces & desert dunes (Udaipur, Jaisalmer, Mount Abu), Himalayan circuits (Spiti, Ladakh, Kedarnath, Chopta), and exotic international escapes across Vietnam, Thailand, Bali & Bhutan.
+            Explore Himalayan treks & village retreats (Rasol Trek, Spiti, Manali-Kasol, Jibhi, Chopta), Royal Rajasthan palaces & desert dunes (Udaipur, Jaisalmer, Mount Abu), and exotic international escapes across Vietnam, Thailand, Bali & Bhutan.
           </p>
         </div>
 
@@ -154,7 +154,7 @@ export const HolidaysSection: React.FC<HolidaysSectionProps> = ({
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search destination (e.g. Udaipur, Jaisalmer, Mount Abu, Spiti, Bali)..."
+              placeholder="Search destination (e.g. Rasol, Kasol, Spiti, Udaipur, Bali)..."
               className="w-full pl-10 pr-8 py-2.5 bg-white/10 hover:bg-white/15 focus:bg-white/20 border border-white/20 rounded-xl text-xs text-white placeholder-slate-300 focus:outline-hidden focus:border-[#ff6a00] transition-all"
             />
             {searchQuery && (
